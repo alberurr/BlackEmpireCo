@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("El JSON no tiene la estructura esperada.");
             return;
         }
-        mostrarDatos(datos.record); // ✅ Aseguramos que `record` existe antes de llamar la función
+        mostrarDatos(datos); // ✅ Aseguramos que `record` existe antes de llamar la función
     })
     .catch(error => console.error("Error al cargar los datos:", error));
 });
