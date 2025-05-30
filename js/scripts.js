@@ -61,16 +61,15 @@ function mostrarDatos(datos) {
 
 /*JSON */
 fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
-    method: 'PUT',
     headers: {
-        "Content-Type": "application/json",
-        "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly" // Tu API Key de JSONBin
-    },
-    body: JSON.stringify(nuevosDatos) // Aquí pasas el arreglo actualizado
+        "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly" // Opcional si tienes una API privada
+    }
 })
 .then(response => response.json())
-.then(data => console.log("Datos actualizados:", data))
-.catch(error => console.error("Error al actualizar los datos:", error));
+.then(datos => {
+    mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
+})
+.catch(error => console.error("Error al cargar los datos:", error));
 
 
 
