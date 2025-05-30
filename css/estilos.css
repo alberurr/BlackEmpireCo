@@ -140,10 +140,11 @@ td:active {
 }
 
 .modal-content {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
+    background: rgba(0, 0, 0, 0.8); /* Ligera transparencia para contraste */
+    border-radius: 8px; /* Mejora visual */
+    padding: 20px;
 }
+
 
 .modal img {
     border: 2px solid #FAC213;
