@@ -8,16 +8,7 @@
     font-family: Azonix;
     src: url(../font/Azonix.otf);
 }
-/*
-.margen {
-    height: 100px;
-    margin: auto;
-    background: #E1A400;
-    border: 2px solid;
-    border-image-source: linear-gradient(to right, #FAC213, #000000);
-    border-image-slice: 1;
-}
-*/
+
 /*Navegador*/
 .navbare{
     background: #1C1C1C;
@@ -140,11 +131,10 @@ td:active {
 }
 
 .modal-content {
-    background: rgba(0, 0, 0, 0.8); /* Ligera transparencia para contraste */
-    border-radius: 8px; /* Mejora visual */
-    padding: 20px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
 }
-
 
 .modal img {
     border: 2px solid #FAC213;
