@@ -47,15 +47,17 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
 });
 /*JSON */
 fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
+    method: 'PUT',
     headers: {
-        "X-Master-Key": "TU_API_KEY" // Opcional si tienes una API privada
-    }
+        "Content-Type": "application/json",
+        "X-Master-Key": "TU_API_KEY" // Tu API Key de JSONBin
+    },
+    body: JSON.stringify(nuevosDatos) // Aquí pasas el arreglo actualizado
 })
 .then(response => response.json())
-.then(datos => {
-    mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
-})
-.catch(error => console.error("Error al cargar los datos:", error));
+.then(data => console.log("Datos actualizados:", data))
+.catch(error => console.error("Error al actualizar los datos:", error));
+
 
 
 
