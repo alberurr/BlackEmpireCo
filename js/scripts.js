@@ -46,8 +46,10 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
     }
 });
 
-// 💡 1️⃣ Definir la función antes de usarla
+// 💡 1️⃣ Definir la función `mostrarDatos()` en el ámbito global
 function mostrarDatos(datos) {
+    console.log("Ejecutando mostrarDatos con:", datos); // Para depuración
+
     const tabla = document.getElementById("tablaParticipantes");
     if (!tabla) {
         console.error("Elemento tablaParticipantes no encontrado.");
@@ -64,10 +66,13 @@ function mostrarDatos(datos) {
         </tr>`;
         tabla.innerHTML += fila;
     });
+
+    console.log("Tabla actualizada con nuevos datos."); // Debugging
 }
 
-// 💡 2️⃣ Usar `DOMContentLoaded` para que la página esté lista antes de cargar datos
+// 💡 2️⃣ Asegurar que el DOM está listo antes de ejecutar `fetch()`
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM completamente cargado."); // Depuración
     fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b/latest', {
         headers: {
             "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly"
@@ -75,11 +80,16 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(response => response.json())
     .then(datos => {
-        console.log("Datos cargados correctamente:", datos.record); // Debugging
-        mostrarDatos(datos.record); // ✅ Llamamos a mostrarDatos correctamente
+        console.log("Datos recibidos desde JSONBin:", datos); // Debugging
+        if (!datos.record) {
+            console.error("El JSON no tiene la estructura esperada.");
+            return;
+        }
+        mostrarDatos(datos.record); // ✅ Aseguramos que `record` existe antes de llamar la función
     })
     .catch(error => console.error("Error al cargar los datos:", error));
 });
+
 
 
 
