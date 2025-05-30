@@ -139,6 +139,9 @@ td:active {
     height: 50px;
 }
 
+.modal {
+    z-index: 1050 !important;
+}
 .modal-content {
     background-color: transparent;
     border: none;
