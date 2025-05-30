@@ -1,0 +1,26 @@
+[
+    {
+        "posicion": 1,
+        "foto": "img/Alfredo Manzo .jpg",
+        "nombre": "Juan Pérez",
+        "score": 98
+    },
+    {
+        "posicion": 2,
+        "foto": "img/Alfredo Manzo .jpg",
+        "nombre": "María López",
+        "score": 100
+    },
+    {
+        "posicion": 3,
+        "foto": "img/Alfredo Manzo .jpg",
+        "nombre": "Carlos García",
+        "score": 92
+    },
+    {
+        "posicion": 3,
+        "foto": "img/Alfredo Manzo .jpg",
+        "nombre": "Carlos García",
+        "score": 300
+    }
+]
