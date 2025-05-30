@@ -1,0 +1,164 @@
+*{
+    margin: 0;
+    padding: 0;
+    background: #1C1C1C;
+}
+
+@font-face {
+    font-family: Azonix;
+    src: url(../font/Azonix.otf);
+}
+/*
+.margen {
+    height: 100px;
+    margin: auto;
+    background: #E1A400;
+    border: 2px solid;
+    border-image-source: linear-gradient(to right, #FAC213, #000000);
+    border-image-slice: 1;
+}
+*/
+/*Navegador*/
+.navbare{
+    background: #1C1C1C;
+        border: 2px solid;
+    border-image-source: linear-gradient(to right, #FAC213, #000000);
+    border-image-slice: 1;
+}
+
+.navbar-toggler {
+    border-image-source: linear-gradient(to right, #FAC213, #000000); /* Color personalizado */
+    border: 2px solid  #E1A400; /* Borde opcional */
+}
+
+.navbar-toggler-icon {
+    background-color: #E1A400;
+}
+
+.navbar .nav-link {
+    color: #E1A400;
+}
+
+.navbar .nav-link:hover {
+    color: #C0392B;
+}
+/*Navegador*/
+
+/*Carrusel*/
+.car {
+    background-color: #E1A400;
+    padding-bottom: 100px;
+}
+
+.carrusel {
+    padding-top: 100px ;
+}
+/*Carrusel*/
+
+.jumbotron{
+    padding: 50px;
+}
+
+.bien h2, .bien p {
+    color: #1C1C1C;
+    background: #E1A400;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Opcional: Mejora legibilidad */
+}
+
+.shadow {
+    background: #E1A400;
+    padding: 20px;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* Efecto de sombra */
+    width: 20rem;
+    color: #fff;
+}
+
+.botones {
+    height: 100px;
+    color: #C0392B;
+    box-shadow: 0px 4px 10px rgba(0.3, 0.3, 0.3, 0.3); /* Efecto de sombra */
+}
+
+.botones a{
+    color: linear-gradient(to bottom, #E67E22, #000000);
+    background-color: #FAC213;
+    margin: auto;
+    padding: auto;
+}
+
+.botones a:hover{
+    color: #E67E22;
+    background-color: linear-gradient(to left, #E67E22, #000000);
+}
+
+.anuncio{
+    color: #fff;
+    background: linear-gradient(to bottom, #E67E22, #000000); /* Color personalizado */;
+    border: 2px solid;
+    border-image-slice: 1;
+    border-image-source: linear-gradient(to right, #E67E22, #000000); /* Color personalizado */
+}
+
+.anuncio h2, .anuncio p {
+    color:#FFFFFF; /* O el color que prefieras */
+     background-color: transparent;
+}
+
+.separador {
+    height: 150px;
+    background: #1C1C1C;
+}
+/**index.html*/
+/**participantes.html*/
+
+/*H1*/
+h1 {
+    height: 50px;
+    color: #A0A0A0;
+}
+/*H1*/
+
+table {
+    border-collapse: collapse;
+}
+
+td:active {
+    color:#A0A0A0;
+}
+
+.table-responsive {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
+.participante-foto{
+    border-radius: 50%;
+    width: 50px; /* Tamaño estándar */
+    height: 50px;
+}
+
+.modal-content {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.modal img {
+    border: 2px solid #FAC213;
+    box-shadow: 0px 0px 15px #FAC213; /* Brillo alrededor */
+}
+/**participantes.html*/
+
+.footer {
+    background: #1C1C1C;
+    color: #C0392B;
+   padding-top: 20px;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 13px;
+    border-top: 3px solid transparent; /* Define un borde transparente para aplicar el gradiente */
+    border-image-source: linear-gradient(to left, #FAC213, #000000);
+    border-image-slice: 1;
+}
