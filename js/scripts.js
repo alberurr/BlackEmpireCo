@@ -13,12 +13,17 @@
     filas.forEach(fila => tabla.appendChild(fila));
 });
 */
-document.addEventListener("DOMContentLoaded", function() {
-    // Verifica si la URL contiene "?admin=true"
-    if (window.location.href.includes("?admin=true")) {
-        document.getElementById("ordenarBtn").style.display = "block"; // Muestra el botón
-    }
-});
+// Obtener parámetros de la URL
+const urlParams = new URLSearchParams(window.location.search);
+const isAdmin = urlParams.get("admin") === "true";
+
+// Obtener el botón
+const ordenarBtn = document.getElementById("ordenarBtn");
+
+// Mostrar u ocultar el botón según el parámetro
+if (!isAdmin) {
+    ordenarBtn.style.display = "none";
+}
 /* Para que se ordenen de mayor a menor */
 document.getElementById("ordenarBtn").addEventListener("click", function() {
     let urlParams = new URLSearchParams(window.location.search);
@@ -40,6 +45,24 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
         filas.forEach(fila => tabla.appendChild(fila));
     }
 });
+/*JSON */
+fetch('https://alberurr.github.io/BlackEmpireCo/data.json')
+    .then(response => response.json())
+    .then(datos => {
+        const tabla = document.getElementById("tablaParticipantes");
+        tabla.innerHTML = ""; // Limpia la tabla antes de llenarla
+        datos.forEach(participante => {
+            const fila = `<tr>
+                <td>${participante.posicion}</td>
+                <td><img src="${participante.foto}" class="img-fluid participante-foto" alt="${participante.nombre}"></td>
+                <td>${participante.nombre}</td>
+                <td>${participante.score}</td>
+            </tr>`;
+            tabla.innerHTML += fila;
+        });
+    })
+    .catch(error => console.error("Error al cargar los datos:", error));
+
 
 
 
