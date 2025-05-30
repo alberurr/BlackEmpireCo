@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".modal").forEach(function (modal) {
-        modal.addEventListener("touchend", function (event) {
-            if (event.target === modal) {
-                var modalInstance = bootstrap.Modal.getInstance(modal);
-                modalInstance.hide();
-            }
+    document.querySelectorAll(".participante-foto").forEach(function (img) {
+        img.addEventListener("click", function () {
+            var modalImg = document.getElementById("imagenModalSrc");
+            modalImg.src = this.src; // Asigna la imagen clicada al modal
         });
     });
 });
