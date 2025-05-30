@@ -54,6 +54,7 @@
 <!--tabla del score-->
 <div class="container-fluid">
     <div class="table-responsive">
+        <button class="btn btn-primary mb-3" id="ordenarBtn">Ordenar de Mayor a Menor</button>
         <table class="table table-dark table-striped text-center">
             <thead>
                 <tr>
@@ -100,6 +101,46 @@
 </div>
 <!--Separador-->
 
+<table class="table table-dark table-striped text-center">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Foto</th>
+            <th>Nombre del Atleta</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="align-middle text-center">1</td>
+            <td>
+                <img src="img/Alfredo Manzo .jpg" alt="Atleta" class="img-fluid participante-foto"
+                    data-bs-toggle="modal" data-bs-target="#imagenModal">
+            </td>
+            <td class="align-middle text-center">Juan Pérez</td>
+        </tr>
+        <tr>
+            <td class="align-middle text-center">2</td>
+            <td>
+                <img src="img/Oliver Navarro .jpg" alt="Atleta" class="img-fluid participante-foto"
+                    data-bs-toggle="modal" data-bs-target="#imagenModal">
+            </td>
+            <td class="align-middle text-center">Alejandro Pérez</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal único -->
+<div class="modal fade" id="imagenModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="imagenModalSrc" class="img-fluid" src="" alt="Imagen del atleta">
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -111,9 +152,7 @@
         </div>
     </footer>
 <!-- Footer -->
-     <script>
-    console.log("Archivo scripts.js cargado correctamente.");
-</script>
+   <script src="js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
   </body> 
 </html>
