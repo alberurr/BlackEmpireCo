@@ -43,3 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+// Cerrar Modal
+function cerrarModal() {
+    var modal = bootstrap.Modal.getInstance(document.getElementById("imagenModal"));
+    modal.hide();
+}
