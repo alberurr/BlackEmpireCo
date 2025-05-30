@@ -45,6 +45,7 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
         filas.forEach(fila => tabla.appendChild(fila));
     }
 });
+// 1. Definir mostrarDatos primero
 function mostrarDatos(datos) {
     const tabla = document.getElementById("tablaParticipantes");
     tabla.innerHTML = ""; // Limpia la tabla antes de llenarla
@@ -59,10 +60,10 @@ function mostrarDatos(datos) {
     });
 }
 
-/*JSON */
+// 2. Llamar a la API después de definir la función
 fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
     headers: {
-        "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly" // Opcional si tienes una API privada
+        "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly" // API Key privada
     }
 })
 .then(response => response.json())
@@ -70,6 +71,7 @@ fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
     mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
 })
 .catch(error => console.error("Error al cargar los datos:", error));
+
 
 
 
