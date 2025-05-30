@@ -45,9 +45,15 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
         filas.forEach(fila => tabla.appendChild(fila));
     }
 });
-// 1. Definir mostrarDatos primero
+
+// 💡 1️⃣ Definir la función antes de usarla
 function mostrarDatos(datos) {
     const tabla = document.getElementById("tablaParticipantes");
+    if (!tabla) {
+        console.error("Elemento tablaParticipantes no encontrado.");
+        return;
+    }
+
     tabla.innerHTML = ""; // Limpia la tabla antes de llenarla
     datos.forEach(participante => {
         const fila = `<tr>
@@ -60,53 +66,20 @@ function mostrarDatos(datos) {
     });
 }
 
-// 2. Llamar a la API después de definir la función
-fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b/latest', {
-    headers: {
-        "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly"
-    }
-})
-.then(response => response.json())
-.then(datos => {
-    console.log("Datos cargados correctamente:", datos.record);
-    (function mostrarDatos(datos) {
-        const tabla = document.getElementById("tablaParticipantes");
-        if (!tabla) {
-            console.error("Elemento tablaParticipantes no encontrado.");
-            return;
-        }
-        tabla.innerHTML = ""; 
-        datos.forEach(participante => {
-            const fila = `<tr>
-                <td>${participante.posicion}</td>
-                <td><img src="${participante.foto}" class="img-fluid participante-foto" alt="${participante.nombre}"></td>
-                <td>${participante.nombre}</td>
-                <td>${participante.score}</td>
-            </tr>`;
-            tabla.innerHTML += fila;
-        });
-    })(datos.record);
-})
-.catch(error => console.error("Error al cargar los datos:", error));
-
-
+// 💡 2️⃣ Usar `DOMContentLoaded` para que la página esté lista antes de cargar datos
 document.addEventListener("DOMContentLoaded", () => {
-    fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
+    fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b/latest', {
         headers: {
             "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly"
         }
     })
     .then(response => response.json())
     .then(datos => {
-        mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
+        console.log("Datos cargados correctamente:", datos.record); // Debugging
+        mostrarDatos(datos.record); // ✅ Llamamos a mostrarDatos correctamente
     })
     .catch(error => console.error("Error al cargar los datos:", error));
 });
-
-
-
-
-
 
 
 
