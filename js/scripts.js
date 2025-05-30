@@ -72,6 +72,20 @@ fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
 })
 .catch(error => console.error("Error al cargar los datos:", error));
 
+document.addEventListener("DOMContentLoaded", () => {
+    fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
+        headers: {
+            "X-Master-Key": "$2a$10$rM7VYo7Ynv14.Jkmm/xauehEVK22cqVMfUgJ/6hwRkLcnDUZUg.ly"
+        }
+    })
+    .then(response => response.json())
+    .then(datos => {
+        mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
+    })
+    .catch(error => console.error("Error al cargar los datos:", error));
+});
+
+
 
 
 
