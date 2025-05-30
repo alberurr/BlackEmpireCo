@@ -131,10 +131,15 @@ td:active {
 }
 
 .modal-content {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
+
+.modal-backdrop {
+    display: none !important;
+}
+
 
 .modal img {
     border: 2px solid #FAC213;
