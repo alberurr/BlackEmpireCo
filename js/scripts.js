@@ -46,23 +46,16 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
     }
 });
 /*JSON */
-fetch('https://alberurr.github.io/BlackEmpireCo/data.json')
-    .then(response => response.json())
-    .then(datos => {
-        const tabla = document.getElementById("tablaParticipantes");
-        tabla.innerHTML = ""; // Limpia la tabla antes de llenarla
-        datos.forEach(participante => {
-            const fila = `<tr>
-                <td>${participante.posicion}</td>
-                <td><img src="${participante.foto}" class="img-fluid participante-foto" alt="${participante.nombre}"></td>
-                <td>${participante.nombre}</td>
-                <td>${participante.score}</td>
-            </tr>`;
-            tabla.innerHTML += fila;
-        });
-    })
-    .catch(error => console.error("Error al cargar los datos:", error));
-
+fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
+    headers: {
+        "X-Master-Key": "TU_API_KEY" // Opcional si tienes una API privada
+    }
+})
+.then(response => response.json())
+.then(datos => {
+    mostrarDatos(datos.record); // JSONBin guarda los datos dentro de `record`
+})
+.catch(error => console.error("Error al cargar los datos:", error));
 
 
 
