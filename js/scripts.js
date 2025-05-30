@@ -45,6 +45,20 @@ document.getElementById("ordenarBtn").addEventListener("click", function() {
         filas.forEach(fila => tabla.appendChild(fila));
     }
 });
+function mostrarDatos(datos) {
+    const tabla = document.getElementById("tablaParticipantes");
+    tabla.innerHTML = ""; // Limpia la tabla antes de llenarla
+    datos.forEach(participante => {
+        const fila = `<tr>
+            <td>${participante.posicion}</td>
+            <td><img src="${participante.foto}" class="img-fluid participante-foto" alt="${participante.nombre}"></td>
+            <td>${participante.nombre}</td>
+            <td>${participante.score}</td>
+        </tr>`;
+        tabla.innerHTML += fila;
+    });
+}
+
 /*JSON */
 fetch('https://api.jsonbin.io/v3/b/68393c7c8960c979a5a2f60b', {
     method: 'PUT',
