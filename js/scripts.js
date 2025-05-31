@@ -14,56 +14,56 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 2, peso: 95, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 95, levantamiento: "Snatch", resultado: true },
                     { Intento: 1, peso: 130, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 135, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 135, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "Grecia Anguiano": [
                     { Intento: 1, peso: 125, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 130, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 130, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 175, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 185, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 190, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "Sonia Serrano": [
                     { Intento: 1, peso: 100, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 105, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 112.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 135, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 145, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 147.5, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "Mary Jose Rosales": [
                     { Intento: 1, peso: 100, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 105, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 115, levantamiento: "Snatch", resultado: true },
                     { Intento: 1, peso: 150, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 157.5, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 160, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "Mariana Fragoso": [
                     { Intento: 1, peso: 127.5, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 137.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 137.5, levantamiento: "Snatch", resultado: true},
                     { Intento: 1, peso: 175, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 180, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 180, levantamiento: "Clean & Jerk", resultado: true },
                 ],
                 "Brenda Mancilla": [
                     { Intento: 1, peso: 110, levantamiento: "Snatch", resultado: false },
                     { Intento: 2, peso: 110, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 115, levantamiento: "Snatch" , resultado: false},
                     { Intento: 1, peso: 140, levantamiento: "Clean & Jerk", resultado: false },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 140, levantamiento: "Clean & Jerk", resultado: false },
+                    { Intento: 3, peso: 145, levantamiento: "Clean & Jerk", resultado: true },
                 ],
                 "Irene Morales": [
                     { Intento: 1, peso: 110, levantamiento: "Snatch", resultado: true},
                     { Intento: 2, peso: 120, levantamiento: "Snatch", resultado: true},
                     { Intento: 3, peso: 130, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 160, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 170, levantamiento: "Clean & Jerk", resultado: true },
+                    { Intento: 3, peso: 180, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "David Arciniega": [
                     { Intento: 1, peso: 215, levantamiento: "Snatch", resultado: true },
