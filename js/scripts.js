@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 85, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 95, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 95, levantamiento: "Snatch", resultado: true },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 130, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 125, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 130, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 130, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 175, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 100, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 105, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 112.5, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 135, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 100, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 105, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 115, levantamiento: "Snatch", resultado: true },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 150, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 127.5, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 137.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 137.5, levantamiento: "Snatch", resultado: true},
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 175, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 110, levantamiento: "Snatch", resultado: false },
                     { Intento: 2, peso: 110, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 115, levantamiento: "Snatch" , resultado: false},
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 140, levantamiento: "Clean & Jerk", resultado: false },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 110, levantamiento: "Snatch", resultado: true},
                     { Intento: 2, peso: 120, levantamiento: "Snatch", resultado: true},
                     { Intento: 3, peso: 130, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 160, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 215, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 225, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 245, levantamiento: "Snatch", resultado: true },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 285, levantamiento: "Clean & Jerk", resultado: false },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 155, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 165, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 165, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 205, levantamiento: "Clean & Jerk", resultado: false  },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 210, levantamiento: "Snatch", resultado: false },
                     { Intento: 2, peso: 210, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 220, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 270, levantamiento: "Clean & Jerk", resultado: false },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 217.5, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 205, levantamiento: "Clean & Jerk", resultado: true },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 175, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 190, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 205, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 225, levantamiento: "Clean & Jerk", resultado: false  },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 212.5, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 255, levantamiento: "Clean & Jerk", resultado: false  },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: false},
                     { Intento: 3, peso: 210, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 275, levantamiento: "Clean & Jerk", resultado: false  },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 195, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 202.5, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 265, levantamiento: "Clean & Jerk", resultado: false  },
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ],
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 1, peso: 135, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 155, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 155, levantamiento: "Snatch", resultado: false },
-                    { Intento: 1, peso: 0, levantamiento: "Clean & Jerk" },
+                    { Intento: 1, peso: 185, levantamiento: "Clean & Jerk", resultado: false},
                     { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
                     { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
                 ]
