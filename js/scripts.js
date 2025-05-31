@@ -8,19 +8,19 @@ document.addEventListener("DOMContentLoaded", function () {
             // Datos de rondas y peso por atleta
             var datosAtletas = {
                 "Juan Pérez": [
-                    { ronda: 1, peso: 100 },
-                    { ronda: 2, peso: 105 },
-                    { ronda: 3, peso: 110 }
+                    { Intento: 1, peso: 100 },
+                    { Intento: 2, peso: 105 },
+                    { Intento: 3, peso: 110 }
                 ],
                 "Alejandro Pérez": [
-                    { ronda: 1, peso: 90 },
-                    { ronda: 2, peso: 95 },
-                    { ronda: 3, peso: 100 }
+                    { Intento: 1, peso: 90 },
+                    { Intento: 2, peso: 95 },
+                    { Intento: 3, peso: 100 }
                 ],
                 "Victor Pérez": [
-                    { ronda: 1, peso: 110 },
-                    { ronda: 2, peso: 115 },
-                    { ronda: 3, peso: 120 }
+                    { Intento: 1, peso: 110 },
+                    { Intento: 2, peso: 115 },
+                    { Intento: 3, peso: 120 }
                 ]
             };
 
