@@ -83,17 +83,10 @@
     background-color: linear-gradient(to left, #E67E22, #000000);
 }
 
-.anuncio{
-    color: #fff;
-    background: linear-gradient(to bottom, #E67E22, #000000); /* Color personalizado */;
-    border: 2px solid;
+.anuncio img{
+       border: 2px solid;
     border-image-slice: 1;
-    border-image-source: linear-gradient(to right, #E67E22, #000000); /* Color personalizado */
-}
-
-.anuncio h2, .anuncio p {
-    color:#FFFFFF; /* O el color que prefieras */
-     background-color: transparent;
+    border-image-source: linear-gradient(to right, #E67E22, #000000); /* Color personalizado */ 
 }
 
 .separador {
