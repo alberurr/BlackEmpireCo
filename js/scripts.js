@@ -70,72 +70,72 @@ document.addEventListener("DOMContentLoaded", function () {
                     { Intento: 2, peso: 225, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 245, levantamiento: "Snatch", resultado: true },
                     { Intento: 1, peso: 285, levantamiento: "Clean & Jerk", resultado: false },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 285, levantamiento: "Clean & Jerk", resultado: true },
+                    { Intento: 3, peso: 305, levantamiento: "Clean & Jerk", resultado: false },
                 ],
                 "Oliver Navarro": [
                     { Intento: 1, peso: 155, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 165, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 165, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 205, levantamiento: "Clean & Jerk", resultado: false  },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 205, levantamiento: "Clean & Jerk", resultado: false  },
+                    { Intento: 3, peso: 205, levantamiento: "Clean & Jerk", resultado: true  },
                 ],
                 "Alejandro Chong": [
                     { Intento: 1, peso: 210, levantamiento: "Snatch", resultado: false },
                     { Intento: 2, peso: 210, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 220, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 270, levantamiento: "Clean & Jerk", resultado: false },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 270, levantamiento: "Clean & Jerk", resultado: true },
+                    { Intento: 3, peso: 275, levantamiento: "Clean & Jerk", resultado: true },
                 ],
                 "Juan Loaiza": [
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 217.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 205, levantamiento: "Clean & Jerk", resultado: true },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 225, levantamiento: "Clean & Jerk", resultado: true },
+                    { Intento: 3, peso: 245, levantamiento: "Clean & Jerk", resultado: true },
                 ],
                 "Adrian Piña": [
                     { Intento: 1, peso: 175, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 190, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 205, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 225, levantamiento: "Clean & Jerk", resultado: false  },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 230, levantamiento: "Clean & Jerk", resultado: false  },
+                    { Intento: 3, peso: 230, levantamiento: "Clean & Jerk", resultado: true  },
                 ],
                 "Javier Valle": [
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: false },
                     { Intento: 3, peso: 212.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 255, levantamiento: "Clean & Jerk", resultado: false  },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 275, levantamiento: "Clean & Jerk", resultado: false  },
+                    { Intento: 3, peso: 275, levantamiento: "Clean & Jerk", resultado: false  },
                 ],
                 "Luis Muñoz": [
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 205, levantamiento: "Snatch", resultado: false},
                     { Intento: 3, peso: 210, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 275, levantamiento: "Clean & Jerk", resultado: false  },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 275, levantamiento: "Clean & Jerk", resultado: false  },
+                    { Intento: 3, peso: 275, levantamiento: "Clean & Jerk", resultado: true  },
                 ],
                 "Hector Mota": [
                     { Intento: 1, peso: 185, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 195, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 202.5, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 265, levantamiento: "Clean & Jerk", resultado: false  },
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 265, levantamiento: "Clean & Jerk", resultado: false  },
+                    { Intento: 3, peso: 265, levantamiento: "Clean & Jerk", resultado: false  },
                 ],
                 "Angelo Lucatero": [
                     { Intento: 1, peso: 135, levantamiento: "Snatch", resultado: true },
                     { Intento: 2, peso: 155, levantamiento: "Snatch", resultado: true },
                     { Intento: 3, peso: 155, levantamiento: "Snatch", resultado: false },
                     { Intento: 1, peso: 185, levantamiento: "Clean & Jerk", resultado: false},
-                    { Intento: 2, peso: 0, levantamiento: "Clean & Jerk" },
-                    { Intento: 3, peso: 0, levantamiento: "Clean & Jerk" }
+                    { Intento: 2, peso: 205, levantamiento: "Clean & Jerk", resultado: false},
+                    { Intento: 3, peso: 205, levantamiento: "Clean & Jerk", resultado: true},
                 ]
             };
 
