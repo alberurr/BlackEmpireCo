@@ -20,7 +20,7 @@ const auth = getAuth(app);
 let athletes = [];
 let editMode = false;
 const workouts = ["26.1", "26.2", "26.3"];
-const ADMIN_EMAIL = "alber.urr@tuemail.com"; // 👈 CAMBIA ESTO por tu email de Firebase
+const ADMIN_EMAIL = "alber.urr@gmail.com"; // 👈 CAMBIA ESTO por tu email de Firebase
 
 // --- Escucha en Tiempo Real (onSnapshot) ---
 // Cada vez que tú o alguien cambie un dato en Firebase, la web se actualiza sola.
