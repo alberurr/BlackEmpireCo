@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Empire - Open 2026</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-header">
+        <img src="https://placehold.co/120x40" alt="Logo" class="header-logo">
+    </div>
+
+    <div class="header-title-container">
+        <h3 class="header-title">OPEN 2026 LEADERBOARD</h3>
+    </div>
+
+    <div id="editBanner" class="edit-banner" style="display: none">
+        <span>✏️ MODO EDICIÓN ACTIVO</span>
+        <button id="exitEditBtn">Cerrar Sesión</button>
+    </div>
+
+    <div class="app">
+        <div class="top-container">
+            <div class="panel-inner">
+                <div class="panel-header">
+                    <div class="panel-title">Líderes por Categoría</div>
+                </div>
+                <div id="gridCards" class="right-panel-grid"></div>
+            </div>
+        </div>
+
+        <div class="scores-container">
+            <div class="panel-inner">
+                <div class="panel-header">
+                    <div class="panel-title">Ranking General</div>
+                    <div class="panel-subtitle">Resultados oficiales</div>
+                </div>
+                <div id="gridBody"></div>
+            </div>
+        </div>
+
+        <div class="panel" id="addAthletePanel" style="display: none">
+            <div class="panel-inner">
+                <h4>Agregar Nuevo Atleta</h4>
+                <form id="addAthleteForm">
+                    <input type="text" id="newName" placeholder="Nombre" required>
+                    <input type="url" id="newPhoto" placeholder="URL Foto (opcional)">
+                    <select id="newCategory" required>
+                        <option value="">Selecciona categoría</option>
+                        <option value="Hombres RX">Hombres RX</option>
+                        <option value="Mujeres RX">Mujeres RX</option>
+                        <option value="Hombres Escalado">Hombres Escalado</option>
+                        <option value="Mujeres Escalado">Mujeres Escalado</option>
+                    </select>
+                    <button type="submit">Registrar Atleta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <span class="footer-text">© 2026 Black Empire Co.</span>
+        <button id="editAccessBtn">⚙️</button>
+    </footer>
+
+    <script type="module" src="energy-grid.js"></script>
+</body>
+</html>
