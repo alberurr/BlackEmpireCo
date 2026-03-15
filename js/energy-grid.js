@@ -69,7 +69,7 @@ const renderTable = (snap) => {
         const a = d.data(); const id = d.id;
         
         // Leaderboard General
-        if (oP <= 10 && oDiv) {
+        if (oDiv) {
             oDiv.innerHTML += `
                 <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
                     <span><b class="text-warning">#${oP++}</b> ${a.name} <small class="text-muted">(${a.gender[0]})</small></span>
