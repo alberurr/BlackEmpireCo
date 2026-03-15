@@ -72,7 +72,7 @@ const renderTable = (snap) => {
         const a = d.data(); const id = d.id;
         
         // --- SCORE TOP 10 GENERAL ---
-        if (oP <= 10 && oDiv) { // Aquí pusimos el límite de 10 otra vez
+        if (oDiv) { // Aquí pusimos el límite de 10 otra vez
             oDiv.innerHTML += `
                 <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
                     <span><b class="text-warning">#${oP++}</b> ${a.name} <small class="text-muted">(${a.gender[0]})</small></span>
