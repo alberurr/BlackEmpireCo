@@ -117,26 +117,31 @@ window.updateScoreType = async (id, field, value) => {
 };
 
 // AUTH / LOGIN
-// ... (Toda tu configuración de Firebase arriba queda igual)
+// --- FUNCIONES GLOBALES REPARADAS ---
 
-// --- HACER FUNCIONES GLOBALES (ESTO ES LO QUE FALTA) ---
 window.promptLogin = () => {
     const pass = prompt("Contraseña de Administrador:");
-    if (pass) {
-        signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass)
-            .then(() => {
-                console.log("Admin logueado");
-            })
-            .catch((error) => {
-                console.error(error);
-                alert("Clave incorrecta o error de conexión");
-            });
-    }
+    if (!pass) return;
+
+    // Usamos tu correo real aquí
+    signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass)
+        .then(() => {
+            alert("¡Login exitoso! Modo edición activado.");
+        })
+        .catch((error) => {
+            console.error("Error completo:", error);
+            if (error.code === 'auth/invalid-credential') {
+                alert("La contraseña no coincide con el usuario registrado en Firebase.");
+            } else {
+                alert("Error de Firebase: " + error.code);
+            }
+        });
 };
 
 window.logout = () => {
     signOut(auth).then(() => {
-        location.reload(); // Recarga para bloquear todo de nuevo
+        alert("Sesión cerrada");
+        location.reload(); 
     });
 };
 
@@ -157,19 +162,22 @@ window.registerAthlete = async () => {
             timestamp: new Date()
         });
         document.getElementById('athleteName').value = "";
-    } catch (e) { alert("Error al guardar: " + e.message); }
+    } catch (e) { 
+        alert("Error al guardar en la base de datos: " + e.message); 
+    }
 };
 
-// --- EL OBSERVADOR DE ESTADO ---
+// --- OBSERVADOR DE ESTADO (VIGILA SI ESTÁS LOGUEADO) ---
 onAuthStateChanged(auth, (user) => {
     const s = document.getElementById('admin-section');
     const b = document.getElementById('admin-banner');
     
     if (user) {
+        console.log("Sesión activa para:", user.email);
         if(s) s.classList.remove('d-none');
         if(b) b.classList.remove('d-none');
-        console.log("Modo edición activado");
     } else {
+        console.log("No hay sesión activa");
         if(s) s.classList.add('d-none');
         if(b) b.classList.add('d-none');
     }
