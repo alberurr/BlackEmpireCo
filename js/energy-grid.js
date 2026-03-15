@@ -123,7 +123,7 @@ window.updateScoreType = async (id, field, value) => {
 window.promptLogin = () => {
     const pass = prompt("Contraseña de Administrador:");
     if (pass) {
-        signInWithEmailAndPassword(auth, "admin@open.com", pass)
+        signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass)
             .then(() => {
                 console.log("Admin logueado");
             })
