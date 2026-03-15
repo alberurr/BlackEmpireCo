@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -30,7 +30,6 @@ async function updateScoreValue(id, wodKey, val) {
         const snap = await getDoc(ref);
         if (snap.exists()) {
             const s = snap.data().scores;
-            // La suma sigue igual, lo que cambia es cómo los ordenamos abajo
             const total = (s.wod1 || 0) + (s.wod2 || 0) + (s.wod3 || 0);
             await updateDoc(ref, { totalPoints: total });
         }
@@ -39,6 +38,18 @@ async function updateScoreValue(id, wodKey, val) {
 
 async function updateScoreType(id, key, val) {
     try { await updateDoc(doc(db, "athletes", id), { [`scores.${key}`]: val }); } catch (e) { console.error(e); }
+}
+
+// --- FUNCIÓN PARA ELIMINAR ---
+async function deleteAthlete(id, name) {
+    if (confirm(`¿Estás seguro de que quieres eliminar a ${name}?`)) {
+        try {
+            await deleteDoc(doc(db, "athletes", id));
+        } catch (e) {
+            console.error("Error al eliminar:", e);
+            alert("No tienes permisos para eliminar.");
+        }
+    }
 }
 
 // --- LÓGICA DE RENDERIZADO ---
@@ -56,6 +67,8 @@ const renderTable = (snap) => {
 
     snap.forEach((d) => {
         const a = d.data(); const id = d.id;
+        
+        // Leaderboard General
         if (oP <= 10 && oDiv) {
             oDiv.innerHTML += `
                 <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
@@ -63,6 +76,8 @@ const renderTable = (snap) => {
                     <b>${a.totalPoints} PTS</b>
                 </div>`;
         }
+
+        // Fila de Tabla
         const row = `<tr>
             <td>${a.gender === 'Male' ? mP++ : fP++}</td>
             <td><input type="text" class="input-name-edit" style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)"></td>
@@ -74,13 +89,15 @@ const renderTable = (snap) => {
                 <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" class="form-control form-control-sm bg-dark text-light text-center" value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
             </td>`).join('')}
             <td class="text-end fw-bold text-warning">${a.totalPoints}</td>
+            ${isAdmin ? `<td><button onclick="deleteAthlete('${id}', '${a.name}')" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 2px 5px;">✕</button></td>` : ''}
         </tr>`;
+
         if (a.gender === 'Male' && mTable) mTable.innerHTML += row;
         else if (fTable) fTable.innerHTML += row;
     });
 };
 
-// --- ESCUCHADORES (CAMBIO A "ASC" PARA MENOR A MAYOR) ---
+// --- ESCUCHADORES (MENOR A MAYOR) ---
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
@@ -119,3 +136,4 @@ window.registerAthlete = async () => {
 window.updateName = updateName;
 window.updateScoreValue = updateScoreValue;
 window.updateScoreType = updateScoreType;
+window.deleteAthlete = deleteAthlete; // Conexión con el botón de eliminar
