@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// TU CONFIGURACIÓN DE FIREBASE (Asegúrate de que sea la tuya)
 const firebaseConfig = {
   apiKey: "AIzaSyCDzitlibJbRU1pz0nP_z01_b-fH1a3N70",
   authDomain: "open2026-ee943.firebaseapp.com",
@@ -17,13 +16,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- LÓGICA DE REGISTRO ---
+// REGISTRO DE ATLETAS
 window.registerAthlete = async () => {
     const name = document.getElementById('athleteName').value;
     const gender = document.getElementById('athleteGender').value;
     const level = document.getElementById('athleteLevel').value;
 
-    if (!name) return alert("Escribe un nombre");
+    if (!name) return alert("Por favor ingresa un nombre");
 
     try {
         await addDoc(collection(db, "athletes"), {
@@ -35,96 +34,81 @@ window.registerAthlete = async () => {
             timestamp: new Date()
         });
         document.getElementById('athleteName').value = "";
-    } catch (e) {
-        console.error("Error al guardar: ", e);
-    }
+    } catch (e) { alert("Error al registrar. Verifica tu conexión."); }
 };
 
-// --- RENDERIZAR TABLAS ---
+// ESCUCHA DE DATOS EN TIEMPO REAL
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snapshot) => {
     const maleTable = document.getElementById('leaderboard-male');
     const femaleTable = document.getElementById('leaderboard-female');
+    const overallTable = document.getElementById('overall-leaderboard');
     
     maleTable.innerHTML = "";
     femaleTable.innerHTML = "";
+    overallTable.innerHTML = "";
 
-    let malePos = 1;
-    let femalePos = 1;
+    let malePos = 1, femalePos = 1, overallPos = 1;
+    const isAdmin = auth.currentUser !== null;
 
     snapshot.forEach((docSnap) => {
         const athlete = docSnap.data();
         const id = docSnap.id;
-        const isAdmin = auth.currentUser !== null;
 
-        // Crear el Badge de nivel
-        const badge = athlete.level === "RX" 
-            ? `<span class="badge bg-danger ms-2">RX</span>` 
-            : `<span class="badge bg-info text-dark ms-2">S</span>`;
+        const badge = `<span class="badge ${athlete.level === 'RX' ? 'badge-rx' : 'badge-s'} ms-2">${athlete.level}</span>`;
 
-        const row = `
+        const rowHTML = `
             <tr>
                 <td>${athlete.gender === 'Male' ? malePos++ : femalePos++}</td>
-                <td>
-                    <span class="fw-bold">${athlete.name}</span>${badge}
-                </td>
-                ${[1, 2, 3].map(num => `
-                    <td>
-                        <input type="number" class="form-control form-control-sm bg-dark text-light border-secondary" 
-                            value="${athlete.scores[`wod${num}`]}" 
-                            ${!isAdmin ? 'disabled' : ''}
-                            onchange="updateScore('${id}', 'wod${num}', this.value)">
-                    </td>
+                <td><span class="fw-bold">${athlete.name}</span>${badge}</td>
+                ${[1, 2, 3].map(n => `
+                    <td><input type="number" class="form-control form-control-sm bg-dark text-light border-secondary shadow-none" 
+                        value="${athlete.scores['wod'+n]}" ${!isAdmin ? 'disabled' : ''} 
+                        onchange="updateScore('${id}', 'wod${n}', this.value)"></td>
                 `).join('')}
                 <td class="fw-bold text-warning">${athlete.totalPoints}</td>
             </tr>
         `;
 
-        if (athlete.gender === 'Male') {
-            maleTable.innerHTML += row;
-        } else {
-            femaleTable.innerHTML += row;
+        // Renderizar en tablas por género
+        if (athlete.gender === 'Male') maleTable.innerHTML += rowHTML;
+        else femaleTable.innerHTML += rowHTML;
+
+        // Renderizar en Top General (solo los mejores 5 o todos)
+        if (overallPos <= 10) {
+            overallTable.innerHTML += `
+                <tr>
+                    <td class="text-warning fw-bold">${overallPos++}</td>
+                    <td>${athlete.name} ${badge}</td>
+                    <td class="small text-muted">${athlete.gender === 'Male' ? 'M' : 'F'}</td>
+                    <td class="text-end fw-bold">${athlete.totalPoints} pts</td>
+                </tr>
+            `;
         }
     });
 });
 
-// --- ACTUALIZAR PUNTAJES ---
 window.updateScore = async (id, wod, value) => {
     const val = parseInt(value) || 0;
     const athleteRef = doc(db, "athletes", id);
-    
-    // Obtenemos los datos actuales para recalcular el total
-    onSnapshot(athleteRef, async (docSnap) => {
-        if (!docSnap.exists()) return;
-        const data = docSnap.data();
+    onSnapshot(athleteRef, async (snap) => {
+        if (!snap.exists()) return;
+        const data = snap.data();
         const newScores = { ...data.scores, [wod]: val };
         const newTotal = Object.values(newScores).reduce((a, b) => a + b, 0);
-
-        await updateDoc(athleteRef, {
-            scores: newScores,
-            totalPoints: newTotal
-        });
+        await updateDoc(athleteRef, { scores: newScores, totalPoints: newTotal });
     }, { onlyOnce: true });
 };
 
-// --- LOGIN / ADMIN ---
 window.promptLogin = () => {
     const pass = prompt("Clave de Administrador:");
-    if (pass) {
-        signInWithEmailAndPassword(auth, "aalber.urr@gmail.com", pass) // Cambia por tu correo real
-            .catch(err => alert("Clave incorrecta"));
-    }
+    if (pass) signInWithEmailAndPassword(auth, "alber.urr@gmail  .com", pass).catch(() => alert("Clave Incorrecta"));
 };
 
 window.logout = () => signOut(auth);
 
 onAuthStateChanged(auth, (user) => {
-    const adminSection = document.getElementById('admin-section');
-    const adminBanner = document.getElementById('admin-banner');
-    if (user) {
-        adminSection.classList.remove('d-none');
-        adminBanner.classList.remove('d-none');
-    } else {
-        adminSection.classList.add('d-none');
-        adminBanner.classList.add('d-none');
-    }
+    const section = document.getElementById('admin-section');
+    const banner = document.getElementById('admin-banner');
+    if (user) { section.classList.remove('d-none'); banner.classList.remove('d-none'); }
+    else { section.classList.add('d-none'); banner.classList.add('d-none'); }
 });
