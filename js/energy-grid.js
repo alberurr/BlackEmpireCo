@@ -81,7 +81,7 @@ const renderTable = (snap) => {
 };
 
 // --- ESCUCHADORES ---
-onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "desc")), (snap) => {
+onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
 });
