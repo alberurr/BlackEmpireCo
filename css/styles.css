@@ -292,3 +292,24 @@ body {
     background: #ff4d4d;
     color: white;
 }
+#overall-leaderboard {
+    max-height: 400px; /* Ajusta esta altura a tu gusto */
+    overflow-y: auto;  /* Habilita el scroll vertical */
+    overflow-x: hidden; /* Evita el scroll horizontal */
+    padding-right: 5px;
+    border: 1px solid #333; /* Un toque visual para definir el área */
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2); /* Fondo sutil */
+}
+
+/* Opcional: Personalizar la barra de scroll para que se vea moderna */
+#overall-leaderboard::-webkit-scrollbar {
+    width: 6px;
+}
+#overall-leaderboard::-webkit-scrollbar-thumb {
+    background: #ffc107; /* Color amarillo/naranja como tus PTS */
+    border-radius: 10px;
+}
+#overall-leaderboard::-webkit-scrollbar-track {
+    background: #222;
+}
