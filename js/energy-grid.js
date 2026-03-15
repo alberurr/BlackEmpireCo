@@ -38,7 +38,7 @@ window.registerAthlete = async () => {
 };
 
 // ACTUALIZACIÓN EN TIEMPO REAL
-onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snapshot) => {
+onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "desc")), (snapshot) => {
     const maleTable = document.getElementById('leaderboard-male');
     const femaleTable = document.getElementById('leaderboard-female');
     const overallDiv = document.getElementById('overall-leaderboard');
