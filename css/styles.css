@@ -313,3 +313,14 @@ body {
 #overall-leaderboard::-webkit-scrollbar-track {
     background: #222;
 }
+
+.nav-tabs .nav-link.active {
+    background-color: #ffc107 !important; /* Color amarillo/naranja */
+    color: #000 !important;
+    border-color: #ffc107 !important;
+    font-weight: bold;
+}
+.nav-tabs .nav-link {
+    transition: 0.3s;
+    border-radius: 0;
+}
