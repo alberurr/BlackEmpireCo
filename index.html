@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Empire Open 2026 - Leaderboard</title>
+    <title>Black Empire Open 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,12 +16,12 @@
 
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-uppercase fw-bold">Open 2026 Leaderboard</h1>
+            <h1 class="text-uppercase fw-bold m-0">Open 2026</h1>
             <button id="admin-btn" class="btn btn-outline-secondary btn-sm" onclick="promptLogin()">⚙️</button>
         </div>
 
         <div id="admin-section" class="card card-body bg-secondary mb-4 d-none">
-            <h5>Agregar Nuevo Atleta</h5>
+            <h5 class="text-dark">Agregar Atleta</h5>
             <div class="row g-2">
                 <div class="col-md-4">
                     <input type="text" id="athleteName" class="form-control" placeholder="Nombre completo">
@@ -44,53 +44,42 @@
             </div>
         </div>
 
-        <ul class="nav nav-tabs mb-3" id="genderTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active text-uppercase" id="male-tab" data-bs-toggle="tab" data-bs-target="#male-panel" type="button">Hombres</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link text-uppercase" id="female-tab" data-bs-toggle="tab" data-bs-target="#female-panel" type="button">Mujeres</button>
-            </li>
-        </ul>
+        <h3 class="text-info text-uppercase mt-4">Hombres</h3>
+        <div class="table-responsive mb-5">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Atleta</th>
+                        <th style="width: 100px;">W1</th>
+                        <th style="width: 100px;">W2</th>
+                        <th style="width: 100px;">W3</th>
+                        <th style="width: 80px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-male">
+                    </tbody>
+            </table>
+        </div>
 
-        <div class="tab-content" id="genderTabsContent">
-            <div class="tab-pane fade show active" id="male-panel" role="tabpanel">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Atleta</th>
-                                <th>WOD 1</th>
-                                <th>WOD 2</th>
-                                <th>WOD 3</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-male">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
+        <hr class="border-secondary my-5">
 
-            <div class="tab-pane fade" id="female-panel" role="tabpanel">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Atleta</th>
-                                <th>WOD 1</th>
-                                <th>WOD 2</th>
-                                <th>WOD 3</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-female">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
+        <h3 class="text-danger text-uppercase">Mujeres</h3>
+        <div class="table-responsive mb-5">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Atleta</th>
+                        <th style="width: 100px;">W1</th>
+                        <th style="width: 100px;">W2</th>
+                        <th style="width: 100px;">W3</th>
+                        <th style="width: 80px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-female">
+                    </tbody>
+            </table>
         </div>
     </div>
 
