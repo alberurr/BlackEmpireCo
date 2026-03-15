@@ -3,101 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Empire Open 2026</title>
+    <title>Black Empire Co - Leaderboard</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        .score-card { background: #111; border: 1px solid #333; border-radius: 8px; }
-        /* Colores específicos para los niveles en el select */
-        .text-rx { color: #ff4d4d !important; font-weight: bold; }
-        .text-s { color: #00d2ff !important; font-weight: bold; }
-        .overall-item { border-bottom: 1px solid #222; padding: 10px 0; }
-        .overall-item:last-child { border: none; }
-        .table thead th { font-size: 0.8rem; letter-spacing: 1px; color: #888; }
-        /* Ajuste para que los inputs y selects no se vean amontonados */
-        .wod-col { min-width: 80px; }
+        :root {
+            --primary-yellow: #ffc107;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Banner de Admin */
+        #admin-banner {
+            background: linear-gradient(90deg, #ff8c00, #ffc107);
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Estilos de las Pestañas */
+        .nav-tabs {
+            border-bottom: 2px solid #333;
+        }
+        .nav-tabs .nav-link {
+            color: #aaa;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: transparent !important;
+            color: var(--primary-yellow) !important;
+            border-bottom: 3px solid var(--primary-yellow) !important;
+        }
+
+        /* Leaderboard General Scroll */
+        #overall-leaderboard {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .overall-item {
+            background: var(--card-bg);
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+
+        /* Estilos de Tabla */
+        .table {
+            color: white;
+            vertical-align: middle;
+        }
+        .text-rx { color: #ff4d4d; font-weight: bold; }
+        .text-s { color: #4dabff; font-weight: bold; }
+        
+        .input-name-edit:focus {
+            outline: 1px solid var(--primary-yellow);
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .btn-outline-danger {
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            background: transparent;
+        }
+        .btn-outline-danger:hover {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .btn-config {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-config:hover { color: var(--primary-yellow); }
     </style>
 </head>
-<body class="bg-dark text-light">
+<body>
 
-    <div id="admin-banner" class="bg-warning text-dark text-center py-2 d-none">
-        <strong>MODO EDICIÓN ACTIVADO</strong>
-        <button class="btn btn-sm btn-outline-dark ms-3" onclick="logout()">Cerrar Sesión</button>
+    <div id="admin-banner" class="d-none">
+        MODO EDICIÓN ACTIVO <button onclick="logout()" class="btn btn-sm btn-dark ms-3 py-0">Cerrar Sesión</button>
     </div>
 
-    <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-uppercase fw-bold m-0" style="letter-spacing: 2px;">Open 2026</h1>
-            <button id="admin-btn" class="btn btn-outline-secondary btn-sm" onclick="promptLogin()">⚙️</button>
+    <div class="btn-config" onclick="promptLogin()">
+        <i class="fas fa-cog fa-lg"></i>
+    </div>
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-uppercase">Open 2026</h1>
+            <p class="text-muted">Leaderboard Oficial - Black Empire Co</p>
         </div>
 
-        <div id="admin-section" class="card card-body bg-secondary mb-4 d-none">
-            <h5 class="text-dark fw-bold mb-3">Registrar Nuevo Atleta</h5>
-            <div class="row g-2">
-                <div class="col-md-8">
-                    <input type="text" id="athleteName" class="form-control" placeholder="Nombre completo">
-                </div>
-                <div class="col-md-2">
-                    <select id="athleteGender" class="form-select">
-                        <option value="Male">Hombre</option>
-                        <option value="Female">Mujer</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100 fw-bold" onclick="registerAthlete()">AÑADIR</button>
+        <div id="admin-section" class="card bg-dark border-secondary mb-5 d-none">
+            <div class="card-body">
+                <h5 class="card-title text-warning mb-3">Registrar Nuevo Atleta</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <input type="text" id="athleteName" class="form-control bg-dark text-white border-secondary" placeholder="Nombre completo">
+                    </div>
+                    <div class="col-md-4">
+                        <select id="athleteGender" class="form-select bg-dark text-white border-secondary">
+                            <option value="Male">Hombre</option>
+                            <option value="Female">Mujer</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button onclick="registerAthlete()" class="btn btn-warning w-100 fw-bold">Agregar</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="score-card p-4 mb-5 shadow-lg">
-            <h4 class="text-center text-uppercase fw-bold mb-4" style="color: #edff00; letter-spacing: 3px;">Scores Generales</h4>
-            <div id="overall-leaderboard">
+        <ul class="nav nav-tabs nav-justified mb-4" id="leaderboardTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="top-tab" data-bs-toggle="tab" data-bs-target="#tab-top" type="button">Top 10 General</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="male-tab" data-bs-toggle="tab" data-bs-target="#tab-male" type="button">Hombres</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="female-tab" data-bs-toggle="tab" data-bs-target="#tab-female" type="button">Mujeres</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="leaderboardTabsContent">
+            
+            <div class="tab-pane fade show active" id="tab-top" role="tabpanel">
+                <div id="overall-leaderboard" class="p-2">
+                    <p class="text-center text-muted">Cargando clasificación...</p>
                 </div>
-        </div>
+            </div>
 
-        <h3 class="text-info text-uppercase fw-bold h5 mb-3">Leaderboard Masculino</h3>
-        <div class="table-responsive mb-5">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                    <tr class="text-center">
-                        <th style="width: 50px;">#</th>
-                        <th class="text-start">Atleta</th>
-                        <th class="wod-col">WOD 1</th>
-                        <th class="wod-col">WOD 2</th>
-                        <th class="wod-col">WOD 3</th>
-                        <th style="width: 80px;">Total</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-male">
-                    </tbody>
-            </table>
-        </div>
+            <div class="tab-pane fade" id="tab-male" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th style="width: 50px;">Pos</th>
+                                <th>Atleta</th>
+                                <th class="text-center">WOD 1</th>
+                                <th class="text-center">WOD 2</th>
+                                <th class="text-center">WOD 3</th>
+                                <th class="text-end">Total</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-male"></tbody>
+                    </table>
+                </div>
+            </div>
 
-        <hr class="border-secondary my-5">
+            <div class="tab-pane fade" id="tab-female" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th style="width: 50px;">Pos</th>
+                                <th>Atleta</th>
+                                <th class="text-center">WOD 1</th>
+                                <th class="text-center">WOD 2</th>
+                                <th class="text-center">WOD 3</th>
+                                <th class="text-end">Total</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-female"></tbody>
+                    </table>
+                </div>
+            </div>
 
-        <h3 class="text-danger text-uppercase fw-bold h5 mb-3">Leaderboard Femenino</h3>
-        <div class="table-responsive mb-5">
-            <table class="table table-dark table-hover align-middle">
-                <thead>
-                    <tr class="text-center">
-                        <th style="width: 50px;">#</th>
-                        <th class="text-start">Atleta</th>
-                        <th class="wod-col">WOD 1</th>
-                        <th class="wod-col">WOD 2</th>
-                        <th class="wod-col">WOD 3</th>
-                        <th style="width: 80px;">Total</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-female">
-                    </tbody>
-            </table>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="js/energy-grid.js"></script>
-
-<script type="module" src="js/energy-grid.js?v=1.1"></script>
+    
+    <script type="module" src="js/energy-grid.js?v=4.0"></script>
 </body>
 </html>
