@@ -98,7 +98,7 @@ window.updateScore = async (id, wod, value) => {
 };
 
 window.promptLogin = () => {
-    const pass = prompt("Password:");
+    const pass = prompt("Clave de Administrador:");
     if (pass) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass).catch(() => alert("Error"));
 };
 
