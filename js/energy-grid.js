@@ -40,22 +40,15 @@ async function updateScoreType(id, key, val) {
     try { await updateDoc(doc(db, "athletes", id), { [`scores.${key}`]: val }); } catch (e) { console.error(e); }
 }
 
-// --- FUNCIÓN PARA ELIMINAR ---
 async function deleteAthlete(id, name) {
     if (confirm(`¿Estás seguro de que quieres eliminar a ${name}?`)) {
-        try {
-            await deleteDoc(doc(db, "athletes", id));
-        } catch (e) {
-            console.error("Error al eliminar:", e);
-            alert("No tienes permisos para eliminar.");
-        }
+        try { await deleteDoc(doc(db, "athletes", id)); } catch (e) { console.error(e); }
     }
 }
 
 // --- LÓGICA DE RENDERIZADO ---
 let currentSnapshot = null;
 
-// --- LÓGICA DE RENDERIZADO (ACTUALIZADA PARA TODOS LOS PARTICIPANTES) ---
 const renderTable = (snap) => {
     const mTable = document.getElementById('leaderboard-male');
     const fTable = document.getElementById('leaderboard-female');
@@ -71,36 +64,64 @@ const renderTable = (snap) => {
     snap.forEach((d) => {
         const a = d.data(); const id = d.id;
         
-        // --- SCORE TOP 10 GENERAL ---
-        if (oDiv) { // Aquí pusimos el límite de 10 otra vez
+        // Plantilla para tarjetas de categorías (Hombres/Mujeres)
+        const cardHTML = `
+            <div class="athlete-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-warning text-dark me-2">#${a.gender === 'Male' ? mP++ : fP++}</span>
+                        <input type="text" class="input-name-edit" 
+                               value="${a.name}" ${!isAdmin ? 'readonly' : ''} 
+                               onchange="updateName('${id}', this.value)">
+                    </div>
+                    <div class="total-cell h5 mb-0">${a.totalPoints} <small style="font-size:0.6em; color:#888;">PTS</small></div>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    ${[1, 2, 3].map(n => `
+                        <div class="wod-box">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span style="font-size:0.6rem; color:#888;">WOD ${n}</span>
+                                <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" 
+                                        class="form-select-sm border-0 ${a.scores['wod'+n+'Type']==='RX'?'text-rx':'text-s'}" 
+                                        style="font-size:0.65rem; background:rgba(255,255,255,0.1); color:white;" 
+                                        ${!isAdmin?'disabled':''}>
+                                    <option value="RX" ${a.scores['wod'+n+'Type']==='RX'?'selected':''}>RX</option>
+                                    <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
+                                </select>
+                            </div>
+                            <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
+                                   class="form-control form-control-sm bg-transparent text-white border-0 text-center p-0" 
+                                   value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
+                        </div>
+                    `).join('')}
+                    ${isAdmin ? `
+                        <button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger border-0 ms-1">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>` : ''}
+                </div>
+            </div>`;
+
+        // Render TOP 10 (Vista General simplificada)
+        if (oP <= 10 && oDiv) {
             oDiv.innerHTML += `
-                <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
-                    <span><b class="text-warning">#${oP++}</b> ${a.name} <small class="text-muted">(${a.gender[0]})</small></span>
-                    <b>${a.totalPoints} PTS</b>
+                <div class="athlete-card d-flex justify-content-between align-items-center py-2 px-3">
+                    <span>
+                        <b class="text-warning">#${oP++}</b> 
+                        <span class="ms-2 text-uppercase" style="font-size:0.9em;">${a.name}</span>
+                        <small class="text-muted ms-1" style="font-size:0.7em;">(${a.gender[0]})</small>
+                    </span>
+                    <b class="text-warning">${a.totalPoints}</b>
                 </div>`;
         }
 
-        // --- FILAS DE TABLAS (HOMBRES Y MUJERES) ---
-        // Esto NO tiene límite, mostrará a todos en sus respectivas pestañas
-        const row = `<tr>
-            <td>${a.gender === 'Male' ? mP++ : fP++}</td>
-            <td><input type="text" class="input-name-edit" style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)"></td>
-            ${[1,2,3].map(n => `<td>
-                <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" class="form-select form-select-sm mb-1 ${a.scores['wod'+n+'Type']==='RX'?'text-rx':'text-s'}" style="font-size:0.6rem; background:#000; color:white; border:none;" ${!isAdmin?'disabled':''}>
-                    <option value="RX" ${a.scores['wod'+n+'Type']==='RX'?'selected':''}>RX</option>
-                    <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
-                </select>
-                <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" class="form-control form-control-sm bg-dark text-light text-center" value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
-            </td>`).join('')}
-            <td class="text-end fw-bold text-warning">${a.totalPoints}</td>
-            ${isAdmin ? `<td><button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger">✕</button></td>` : ''}
-        </tr>`;
-
-        if (a.gender === 'Male' && mTable) mTable.innerHTML += row;
-        else if (fTable) fTable.innerHTML += row;
+        // Asignar a su pestaña correspondiente
+        if (a.gender === 'Male' && mTable) mTable.innerHTML += cardHTML;
+        else if (fTable) fTable.innerHTML += cardHTML;
     });
 };
-// --- ESCUCHADORES (MENOR A MAYOR) ---
+
+// --- ESCUCHADORES Y AUTH ---
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
@@ -117,7 +138,7 @@ onAuthStateChanged(auth, (u) => {
 // --- EXPOSICIÓN GLOBAL ---
 window.promptLogin = () => {
     const p = prompt("Password:");
-    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Error: " + e.code));
+    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Acceso denegado"));
 };
 
 window.logout = () => signOut(auth).then(() => location.reload());
@@ -139,4 +160,4 @@ window.registerAthlete = async () => {
 window.updateName = updateName;
 window.updateScoreValue = updateScoreValue;
 window.updateScoreType = updateScoreType;
-window.deleteAthlete = deleteAthlete; // Conexión con el botón de eliminar
+window.deleteAthlete = deleteAthlete;
