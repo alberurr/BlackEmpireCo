@@ -110,7 +110,7 @@ window.updateScore = async (id, wod, value) => {
 window.promptLogin = () => {
     const pass = prompt("Clave de Administrador:");
     if (pass) {
-        signInWithEmailAndPassword(auth, "admin@open.com", pass) // Cambia por tu correo real
+        signInWithEmailAndPassword(auth, "aalber.urr@gmail.com", pass) // Cambia por tu correo real
             .catch(err => alert("Clave incorrecta"));
     }
 };
