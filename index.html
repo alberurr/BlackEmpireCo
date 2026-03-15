@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Black Empire Open 2026</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        .badge-rx { background-color: #ff4d4d; color: white; }
-        .badge-s { background-color: #00d2ff; color: #000; }
-        .overall-section { border: 1px solid #444; border-radius: 10px; padding: 20px; background: #1a1a1a; }
+        .score-card { background: #111; border: 1px solid #333; border-radius: 8px; }
+        .text-rx { color: #ff4d4d; font-weight: bold; font-size: 0.8rem; }
+        .text-s { color: #00d2ff; font-weight: bold; font-size: 0.8rem; }
+        .table thead th { border-bottom: 2px solid #444; color: #aaa; text-transform: uppercase; font-size: 0.85rem; }
+        .overall-item { border-bottom: 1px solid #222; padding: 8px 0; }
+        .overall-item:last-child { border: none; }
     </style>
 </head>
 <body class="bg-dark text-light">
@@ -21,16 +24,13 @@
 
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-uppercase fw-bold m-0">Open 2026</h1>
+            <h1 class="text-uppercase fw-bold m-0" style="letter-spacing: 2px;">Open 2026</h1>
             <button id="admin-btn" class="btn btn-outline-secondary btn-sm" onclick="promptLogin()">⚙️</button>
         </div>
 
         <div id="admin-section" class="card card-body bg-secondary mb-4 d-none">
-            <h5 class="text-dark fw-bold">Registrar Atleta</h5>
             <div class="row g-2">
-                <div class="col-md-4">
-                    <input type="text" id="athleteName" class="form-control" placeholder="Nombre completo">
-                </div>
+                <div class="col-md-4"><input type="text" id="athleteName" class="form-control" placeholder="Nombre"></div>
                 <div class="col-md-3">
                     <select id="athleteGender" class="form-select">
                         <option value="Male">Hombre</option>
@@ -43,69 +43,54 @@
                         <option value="Scaled">Escalado</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-primary w-100 fw-bold" onclick="registerAthlete()">REGISTRAR</button>
+                <div class="col-md-2"><button class="btn btn-primary w-100" onclick="registerAthlete()">AÑADIR</button></div>
+            </div>
+        </div>
+
+        <div class="score-card p-4 mb-5">
+            <h4 class="text-center text-uppercase fw-bold mb-4" style="color: #edff00;">Scores Generales</h4>
+            <div id="overall-leaderboard">
+                </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 mb-5">
+                <h3 class="text-info text-uppercase fw-bold h5 mb-3">Leaderboard Masculino</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Atleta</th>
+                                <th class="text-center">WODS</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-male"></tbody>
+                    </table>
                 </div>
             </div>
-        </div>
 
-        <div class="overall-section mb-5 shadow">
-            <h3 class="text-center text-warning text-uppercase fw-bold">Top General Scores</h3>
-            <p class="text-center text-muted small">Los mejores puntajes de toda la competencia</p>
-            <div class="table-responsive">
-                <table class="table table-dark table-sm mb-0">
-                    <thead>
-                        <tr class="text-muted">
-                            <th>POS</th>
-                            <th>ATLETA</th>
-                            <th>GÉNERO</th>
-                            <th class="text-end">TOTAL</th>
-                        </tr>
-                    </thead>
-                    <tbody id="overall-leaderboard">
-                        </tbody>
-                </table>
+            <div class="col-lg-6 mb-5">
+                <h3 class="text-danger text-uppercase fw-bold h5 mb-3">Leaderboard Femenino</h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Atleta</th>
+                                <th class="text-center">WODS</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-female"></tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-
-        <hr class="border-secondary my-5">
-
-        <h3 class="text-info text-uppercase fw-bold mb-3">Hombres</h3>
-        <div class="table-responsive mb-5">
-            <table class="table table-dark table-hover border-secondary">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">#</th>
-                        <th>Atleta</th>
-                        <th>W1</th>
-                        <th>W2</th>
-                        <th>W3</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-male"></tbody>
-            </table>
-        </div>
-
-        <h3 class="text-danger text-uppercase fw-bold mb-3">Mujeres</h3>
-        <div class="table-responsive mb-5">
-            <table class="table table-dark table-hover border-secondary">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">#</th>
-                        <th>Atleta</th>
-                        <th>W1</th>
-                        <th>W2</th>
-                        <th>W3</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-female"></tbody>
-            </table>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="energy-grid.js"></script>
+    <script type="module" src="js/energy-grid.js"></script>
 </body>
 </html>
