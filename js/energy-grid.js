@@ -4,12 +4,13 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 
 // TU CONFIGURACIÓN DE FIREBASE (Asegúrate de que sea la tuya)
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "open2026-ee943.firebaseapp.com",
-    projectId: "open2026-ee943",
-    storageBucket: "open2026-ee943.appspot.com",
-    messagingSenderId: "TU_ID",
-    appId: "TU_APP_ID"
+  apiKey: "AIzaSyCDzitlibJbRU1pz0nP_z01_b-fH1a3N70",
+  authDomain: "open2026-ee943.firebaseapp.com",
+  projectId: "open2026-ee943",
+  storageBucket: "open2026-ee943.firebasestorage.app",
+  messagingSenderId: "170906799656",
+  appId: "1:170906799656:web:9a9529b975b8a2fba72f1d",
+  measurementId: "G-EGWH8ZC49E"
 };
 
 const app = initializeApp(firebaseConfig);
