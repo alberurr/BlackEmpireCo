@@ -55,20 +55,25 @@ async function deleteAthlete(id, name) {
 // --- LÓGICA DE RENDERIZADO ---
 let currentSnapshot = null;
 
+// --- LÓGICA DE RENDERIZADO (ACTUALIZADA PARA TODOS LOS PARTICIPANTES) ---
 const renderTable = (snap) => {
     const mTable = document.getElementById('leaderboard-male');
     const fTable = document.getElementById('leaderboard-female');
     const oDiv = document.getElementById('overall-leaderboard');
     
-    if (mTable) mTable.innerHTML = ""; if (fTable) fTable.innerHTML = ""; if (oDiv) oDiv.innerHTML = "";
-    let mP = 1, fP = 1, oP = 1;
+    if (mTable) mTable.innerHTML = ""; 
+    if (fTable) fTable.innerHTML = ""; 
+    if (oDiv) oDiv.innerHTML = "";
     
+    let mP = 1, fP = 1, oP = 1;
     const isAdmin = auth.currentUser !== null;
 
     snap.forEach((d) => {
-        const a = d.data(); const id = d.id;
+        const a = d.data(); 
+        const id = d.id;
         
-        // Leaderboard General
+        // --- SCORE GENERAL (MUESTRA A TODOS) ---
+        // Eliminamos la condición "oP <= 10" para que no haya límite
         if (oDiv) {
             oDiv.innerHTML += `
                 <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
@@ -77,7 +82,7 @@ const renderTable = (snap) => {
                 </div>`;
         }
 
-        // Fila de Tabla
+        // --- FILAS DE TABLAS POR GÉNERO ---
         const row = `<tr>
             <td>${a.gender === 'Male' ? mP++ : fP++}</td>
             <td><input type="text" class="input-name-edit" style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)"></td>
@@ -89,7 +94,7 @@ const renderTable = (snap) => {
                 <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" class="form-control form-control-sm bg-dark text-light text-center" value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
             </td>`).join('')}
             <td class="text-end fw-bold text-warning">${a.totalPoints}</td>
-            ${isAdmin ? `<td><button onclick="deleteAthlete('${id}', '${a.name}')" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 2px 5px;">✕</button></td>` : ''}
+            ${isAdmin ? `<td><button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger">✕</button></td>` : ''}
         </tr>`;
 
         if (a.gender === 'Male' && mTable) mTable.innerHTML += row;
