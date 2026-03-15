@@ -442,27 +442,70 @@ window.updateScoreType = async (id, typeKey, value) => {
     } catch (e) { console.error("Error tipo:", e); }
 };
 
-// --- LOGIN / LOGOUT ---
+// --- VINCULACIÓN DE FUNCIONES AL OBJETO GLOBAL (WINDOW) ---
+// Esto es vital para que los botones onclick="promptLogin()" etc. funcionen
 
 window.promptLogin = () => {
     const pass = prompt("Contraseña de Admin:");
     if (pass) {
         signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass)
-            .catch((error) => alert("Error de acceso: " + error.code));
+            .then(() => {
+                console.log("Login exitoso");
+                // La tabla se refrescará sola por el onSnapshot
+            })
+            .catch((error) => {
+                console.error("Error de login:", error);
+                alert("Error de acceso: " + error.code);
+            });
     }
 };
 
 window.logout = () => {
-    signOut(auth).then(() => location.reload());
+    signOut(auth).then(() => {
+        console.log("Sesión cerrada");
+        location.reload();
+    });
 };
 
+window.registerAthlete = async () => {
+    const nameEl = document.getElementById('athleteName');
+    const genderEl = document.getElementById('athleteGender');
+    if (!nameEl.value) return alert("Ingresa un nombre");
+
+    try {
+        await addDoc(collection(db, "athletes"), {
+            name: nameEl.value,
+            gender: genderEl.value,
+            scores: { 
+                wod1: 0, wod1Type: 'RX', 
+                wod2: 0, wod2Type: 'RX', 
+                wod3: 0, wod3Type: 'RX' 
+            },
+            totalPoints: 0,
+            timestamp: new Date()
+        });
+        nameEl.value = "";
+    } catch (e) { 
+        console.error("Error al registrar:", e);
+        alert("No se pudo registrar el atleta.");
+    }
+};
+
+// Vinculamos también las funciones de edición de la tabla
+window.updateName = updateName;
+window.updateScoreValue = updateScoreValue;
+window.updateScoreType = updateScoreType;
+
+// --- OBSERVADOR DE ESTADO ---
 onAuthStateChanged(auth, (user) => {
     const s = document.getElementById('admin-section');
     const b = document.getElementById('admin-banner');
     if (user) {
+        console.log("Admin detectado:", user.email);
         if (s) s.classList.remove('d-none');
         if (b) b.classList.remove('d-none');
     } else {
+        console.log("Nadie logueado");
         if (s) s.classList.add('d-none');
         if (b) b.classList.add('d-none');
     }
