@@ -17,132 +17,83 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- FUNCIONES DE ACTUALIZACIÓN ---
-
-async function updateName(id, newName) {
-    if (!newName) return;
-    try {
-        await updateDoc(doc(db, "athletes", id), { name: newName });
-    } catch (e) { console.error("Error nombre:", e); }
+// --- FUNCIONES CORE ---
+async function updateName(id, val) {
+    try { await updateDoc(doc(db, "athletes", id), { name: val }); } catch (e) { console.error(e); }
 }
 
-async function updateScoreValue(id, wodKey, value) {
-    const val = parseInt(value) || 0;
-    const athleteRef = doc(db, "athletes", id);
+async function updateScoreValue(id, wodKey, val) {
+    const v = parseInt(val) || 0;
+    const ref = doc(db, "athletes", id);
     try {
-        await updateDoc(athleteRef, { [`scores.${wodKey}`]: val });
-        const snap = await getDoc(athleteRef);
+        await updateDoc(ref, { [`scores.${wodKey}`]: v });
+        const snap = await getDoc(ref);
         if (snap.exists()) {
             const s = snap.data().scores;
-            const newTotal = (s.wod1 || 0) + (s.wod2 || 0) + (s.wod3 || 0);
-            await updateDoc(athleteRef, { totalPoints: newTotal });
+            const total = (s.wod1 || 0) + (s.wod2 || 0) + (s.wod3 || 0);
+            await updateDoc(ref, { totalPoints: total });
         }
-    } catch (e) { console.error("Error score:", e); }
+    } catch (e) { console.error(e); }
 }
 
-async function updateScoreType(id, typeKey, value) {
-    try {
-        await updateDoc(doc(db, "athletes", id), { [`scores.${typeKey}`]: value });
-    } catch (e) { console.error("Error tipo:", e); }
+async function updateScoreType(id, key, val) {
+    try { await updateDoc(doc(db, "athletes", id), { [`scores.${key}`]: val }); } catch (e) { console.error(e); }
 }
 
-// --- LEADERBOARD EN TIEMPO REAL ---
-
-onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "desc")), (snapshot) => {
-    const maleTable = document.getElementById('leaderboard-male');
-    const femaleTable = document.getElementById('leaderboard-female');
-    const overallDiv = document.getElementById('overall-leaderboard');
+// --- RENDERIZADO ---
+onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "desc")), (snap) => {
+    const mTable = document.getElementById('leaderboard-male');
+    const fTable = document.getElementById('leaderboard-female');
+    const oDiv = document.getElementById('overall-leaderboard');
     
-    if (maleTable) maleTable.innerHTML = ""; 
-    if (femaleTable) femaleTable.innerHTML = ""; 
-    if (overallDiv) overallDiv.innerHTML = "";
+    if (mTable) mTable.innerHTML = ""; if (fTable) fTable.innerHTML = ""; if (oDiv) oDiv.innerHTML = "";
+    let mP = 1, fP = 1, oP = 1;
+    const admin = auth.currentUser !== null;
 
-    let mPos = 1, fPos = 1, oPos = 1;
-    const isAdmin = auth.currentUser !== null;
-
-    snapshot.forEach((docSnap) => {
-        const a = docSnap.data();
-        const id = docSnap.id;
-
-        if (oPos <= 10 && overallDiv) {
-            overallDiv.innerHTML += `
-                <div class="overall-item d-flex justify-content-between align-items-center p-2 border-bottom border-secondary">
-                    <div>
-                        <span class="text-warning fw-bold me-2">#${oPos++}</span>
-                        <span class="text-uppercase fw-bold">${a.name}</span>
-                        <small class="text-muted ms-2">(${a.gender === 'Male' ? 'M' : 'F'})</small>
-                    </div>
-                    <div class="fw-bold">${a.totalPoints} PTS</div>
-                </div>`;
+    snap.forEach((d) => {
+        const a = d.data(); const id = d.id;
+        if (oP <= 10 && oDiv) {
+            oDiv.innerHTML += `<div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
+                <span><b class="text-warning">#${oP++}</b> ${a.name} <small class="text-muted">(${a.gender[0]})</small></span>
+                <b>${a.totalPoints} PTS</b>
+            </div>`;
         }
-
-        const rowHTML = `
-            <tr>
-                <td class="text-center text-muted small">${a.gender === 'Male' ? mPos++ : fPos++}</td>
-                <td class="text-start">
-                    <input type="text" class="input-name-edit" 
-                        style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;"
-                        value="${a.name}" ${!isAdmin ? 'readonly' : ''} 
-                        onchange="updateName('${id}', this.value)">
-                </td>
-                ${[1, 2, 3].map(n => `
-                    <td class="text-center">
-                        <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" 
-                            class="form-select form-select-sm mb-1 ${a.scores['wod'+n+'Type'] === 'RX' ? 'text-rx' : 'text-s'}" 
-                            style="font-size: 0.65rem; background: #000; color:white; border:none;" ${!isAdmin ? 'disabled' : ''}>
-                            <option value="RX" ${a.scores['wod'+n+'Type'] === 'RX' ? 'selected' : ''}>RX</option>
-                            <option value="S" ${a.scores['wod'+n+'Type'] === 'S' ? 'selected' : ''}>S</option>
-                        </select>
-                        <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
-                            class="form-control form-control-sm bg-dark text-light border-secondary text-center" 
-                            style="font-size: 0.8rem; min-width:60px;" value="${a.scores['wod'+n] || 0}" ${!isAdmin ? 'disabled' : ''}>
-                    </td>
-                `).join('')}
-                <td class="text-end fw-bold text-warning">${a.totalPoints}</td>
-            </tr>`;
-
-        if (a.gender === 'Male' && maleTable) maleTable.innerHTML += rowHTML;
-        else if (a.gender === 'Female' && femaleTable) femaleTable.innerHTML += rowHTML;
+        const row = `<tr>
+            <td>${a.gender === 'Male' ? mP++ : fP++}</td>
+            <td><input type="text" class="input-name-edit" style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;" value="${a.name}" ${!admin ? 'readonly' : ''} onchange="updateName('${id}', this.value)"></td>
+            ${[1,2,3].map(n => `<td>
+                <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" class="form-select form-select-sm mb-1 ${a.scores['wod'+n+'Type']==='RX'?'text-rx':'text-s'}" style="font-size:0.6rem; background:#000; color:white; border:none;" ${!admin?'disabled':''}>
+                    <option value="RX" ${a.scores['wod'+n+'Type']==='RX'?'selected':''}>RX</option>
+                    <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
+                </select>
+                <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" class="form-control form-control-sm bg-dark text-light text-center" value="${a.scores['wod'+n]||0}" ${!admin?'disabled':''}>
+            </td>`).join('')}
+            <td class="text-end fw-bold text-warning">${a.totalPoints}</td>
+        </tr>`;
+        if (a.gender === 'Male' && mTable) mTable.innerHTML += row;
+        else if (fTable) fTable.innerHTML += row;
     });
 });
 
-// --- VINCULACIÓN GLOBAL (HACE QUE LOS BOTONES FUNCIONEN) ---
-
+// --- EXPOSICIÓN GLOBAL ---
 window.promptLogin = () => {
-    const pass = prompt("Contraseña de Admin:");
-    if (pass) {
-        signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass)
-            .catch((error) => alert("Error: " + error.code));
-    }
+    const p = prompt("Password:");
+    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Error: " + e.code));
 };
-
 window.logout = () => signOut(auth).then(() => location.reload());
-
 window.registerAthlete = async () => {
-    const name = document.getElementById('athleteName').value;
-    const gender = document.getElementById('athleteGender').value;
-    if (!name) return alert("Ingresa un nombre");
-    try {
-        await addDoc(collection(db, "athletes"), {
-            name, gender,
-            scores: { wod1: 0, wod1Type: 'RX', wod2: 0, wod2Type: 'RX', wod3: 0, wod3Type: 'RX' },
-            totalPoints: 0, timestamp: new Date()
-        });
-        document.getElementById('athleteName').value = "";
-    } catch (e) { console.error(e); }
+    const n = document.getElementById('athleteName').value;
+    const g = document.getElementById('athleteGender').value;
+    if (!n) return;
+    await addDoc(collection(db, "athletes"), { name: n, gender: g, scores: { wod1:0, wod1Type:'RX', wod2:0, wod2Type:'RX', wod3:0, wod3Type:'RX' }, totalPoints:0 });
+    document.getElementById('athleteName').value = "";
 };
-
 window.updateName = updateName;
 window.updateScoreValue = updateScoreValue;
 window.updateScoreType = updateScoreType;
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (u) => {
     const s = document.getElementById('admin-section'), b = document.getElementById('admin-banner');
-    if (user) { 
-        if (s) s.classList.remove('d-none'); 
-        if (b) b.classList.remove('d-none'); 
-    } else { 
-        if (s) s.classList.add('d-none'); 
-        if (b) b.classList.add('d-none'); 
-    }
+    if (s) s.classList.toggle('d-none', !u);
+    if (b) b.classList.toggle('d-none', !u);
 });
