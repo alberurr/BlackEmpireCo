@@ -30,6 +30,7 @@ async function updateScoreValue(id, wodKey, val) {
         const snap = await getDoc(ref);
         if (snap.exists()) {
             const s = snap.data().scores;
+            // La suma sigue igual, lo que cambia es cómo los ordenamos abajo
             const total = (s.wod1 || 0) + (s.wod2 || 0) + (s.wod3 || 0);
             await updateDoc(ref, { totalPoints: total });
         }
@@ -51,7 +52,6 @@ const renderTable = (snap) => {
     if (mTable) mTable.innerHTML = ""; if (fTable) fTable.innerHTML = ""; if (oDiv) oDiv.innerHTML = "";
     let mP = 1, fP = 1, oP = 1;
     
-    // Detecta si hay un admin logueado en este instante
     const isAdmin = auth.currentUser !== null;
 
     snap.forEach((d) => {
@@ -80,7 +80,7 @@ const renderTable = (snap) => {
     });
 };
 
-// --- ESCUCHADORES ---
+// --- ESCUCHADORES (CAMBIO A "ASC" PARA MENOR A MAYOR) ---
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
@@ -91,12 +91,10 @@ onAuthStateChanged(auth, (u) => {
     const b = document.getElementById('admin-banner');
     if (s) s.classList.toggle('d-none', !u);
     if (b) b.classList.toggle('d-none', !u);
-
-    // Si el usuario inicia sesión o cierra, redibujamos la tabla para habilitar/deshabilitar campos
     if (currentSnapshot) renderTable(currentSnapshot);
 });
 
-// --- EXPOSICIÓN GLOBAL PARA HTML ---
+// --- EXPOSICIÓN GLOBAL ---
 window.promptLogin = () => {
     const p = prompt("Password:");
     if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Error: " + e.code));
@@ -110,11 +108,9 @@ window.registerAthlete = async () => {
     if (!n) return alert("Nombre requerido");
     try {
         await addDoc(collection(db, "athletes"), { 
-            name: n, 
-            gender: g, 
+            name: n, gender: g, 
             scores: { wod1:0, wod1Type:'RX', wod2:0, wod2Type:'RX', wod3:0, wod3Type:'RX' }, 
-            totalPoints:0,
-            timestamp: new Date()
+            totalPoints:0, timestamp: new Date()
         });
         document.getElementById('athleteName').value = "";
     } catch (e) { console.error(e); }
