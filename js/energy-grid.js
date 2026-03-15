@@ -117,15 +117,60 @@ window.updateScoreType = async (id, field, value) => {
 };
 
 // AUTH / LOGIN
+// ... (Toda tu configuración de Firebase arriba queda igual)
+
+// --- HACER FUNCIONES GLOBALES (ESTO ES LO QUE FALTA) ---
 window.promptLogin = () => {
-    const pass = prompt("Contraseña de Admin:");
-    if (pass) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", pass).catch(() => alert("Clave incorrecta"));
+    const pass = prompt("Contraseña de Administrador:");
+    if (pass) {
+        signInWithEmailAndPassword(auth, "admin@open.com", pass)
+            .then(() => {
+                console.log("Admin logueado");
+            })
+            .catch((error) => {
+                console.error(error);
+                alert("Clave incorrecta o error de conexión");
+            });
+    }
 };
 
-window.logout = () => signOut(auth);
+window.logout = () => {
+    signOut(auth).then(() => {
+        location.reload(); // Recarga para bloquear todo de nuevo
+    });
+};
 
+window.registerAthlete = async () => {
+    const name = document.getElementById('athleteName').value;
+    const gender = document.getElementById('athleteGender').value;
+    if (!name) return alert("Ingresa un nombre");
+
+    try {
+        await addDoc(collection(db, "athletes"), {
+            name, gender,
+            scores: { 
+                wod1: 0, wod1Type: 'RX', 
+                wod2: 0, wod2Type: 'RX', 
+                wod3: 0, wod3Type: 'RX' 
+            },
+            totalPoints: 0,
+            timestamp: new Date()
+        });
+        document.getElementById('athleteName').value = "";
+    } catch (e) { alert("Error al guardar: " + e.message); }
+};
+
+// --- EL OBSERVADOR DE ESTADO ---
 onAuthStateChanged(auth, (user) => {
-    const s = document.getElementById('admin-section'), b = document.getElementById('admin-banner');
-    if (user) { s.classList.remove('d-none'); b.classList.remove('d-none'); }
-    else { s.classList.add('d-none'); b.classList.add('d-none'); }
+    const s = document.getElementById('admin-section');
+    const b = document.getElementById('admin-banner');
+    
+    if (user) {
+        if(s) s.classList.remove('d-none');
+        if(b) b.classList.remove('d-none');
+        console.log("Modo edición activado");
+    } else {
+        if(s) s.classList.add('d-none');
+        if(b) b.classList.add('d-none');
+    }
 });
