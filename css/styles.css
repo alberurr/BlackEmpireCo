@@ -200,3 +200,54 @@ select:disabled {
   .wod-box { padding: 5px; }
   .athlete-card { padding: 12px; }
 }
+
+/* --- Ajustes Críticos para Mobile --- */
+@media (max-width: 576px) {
+    .app {
+        padding: 10px;
+    }
+
+    .athlete-card {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    /* Forzamos a que los WODs tengan un tamaño mínimo y permitan scroll si es necesario */
+    .athlete-card .d-flex.gap-2 {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+        gap: 8px !important;
+    }
+
+    .wod-box {
+        padding: 5px;
+        min-width: 0; /* Permite que se encojan */
+    }
+
+    .wod-box input {
+        font-size: 0.9em !important;
+        padding: 2px !important;
+    }
+
+    .wod-box select {
+        font-size: 0.6em !important;
+    }
+
+    .header-title {
+        font-size: 1.8em;
+    }
+
+    /* Ajuste de pestañas para que no se amontonen */
+    .nav-tabs .nav-link {
+        padding: 10px 5px;
+        font-size: 0.75em;
+    }
+}
+
+/* Evitar que el input del nombre se desborde */
+.input-name-edit {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
