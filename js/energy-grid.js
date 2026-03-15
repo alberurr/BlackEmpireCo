@@ -69,12 +69,10 @@ const renderTable = (snap) => {
     const isAdmin = auth.currentUser !== null;
 
     snap.forEach((d) => {
-        const a = d.data(); 
-        const id = d.id;
+        const a = d.data(); const id = d.id;
         
-        // --- SCORE GENERAL (MUESTRA A TODOS) ---
-        // Eliminamos la condición "oP <= 10" para que no haya límite
-        if (oDiv) {
+        // --- SCORE TOP 10 GENERAL ---
+        if (oP <= 10 && oDiv) { // Aquí pusimos el límite de 10 otra vez
             oDiv.innerHTML += `
                 <div class="overall-item d-flex justify-content-between p-2 border-bottom border-secondary">
                     <span><b class="text-warning">#${oP++}</b> ${a.name} <small class="text-muted">(${a.gender[0]})</small></span>
@@ -82,7 +80,8 @@ const renderTable = (snap) => {
                 </div>`;
         }
 
-        // --- FILAS DE TABLAS POR GÉNERO ---
+        // --- FILAS DE TABLAS (HOMBRES Y MUJERES) ---
+        // Esto NO tiene límite, mostrará a todos en sus respectivas pestañas
         const row = `<tr>
             <td>${a.gender === 'Male' ? mP++ : fP++}</td>
             <td><input type="text" class="input-name-edit" style="background:transparent; border:none; color:white; text-transform:uppercase; font-weight:bold; width:100%;" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)"></td>
@@ -101,7 +100,6 @@ const renderTable = (snap) => {
         else if (fTable) fTable.innerHTML += row;
     });
 };
-
 // --- ESCUCHADORES (MENOR A MAYOR) ---
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
