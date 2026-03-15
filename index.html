@@ -3,67 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Empire - Open 2026</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Black Empire Open 2026 - Leaderboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="app-header">
-        <img src="https://placehold.co/120x40" alt="Logo" class="header-logo">
+<body class="bg-dark text-light">
+
+    <div id="admin-banner" class="bg-warning text-dark text-center py-2 d-none">
+        <strong>MODO EDICIÓN ACTIVADO</strong>
+        <button class="btn btn-sm btn-outline-dark ms-3" onclick="logout()">Cerrar Sesión</button>
     </div>
 
-    <div class="header-title-container">
-        <h3 class="header-title">OPEN 2026 LEADERBOARD</h3>
-    </div>
-
-    <div id="editBanner" class="edit-banner" style="display: none">
-        <span>✏️ MODO EDICIÓN ACTIVO</span>
-        <button id="exitEditBtn">Cerrar Sesión</button>
-    </div>
-
-    <div class="app">
-        <div class="top-container">
-            <div class="panel-inner">
-                <div class="panel-header">
-                    <div class="panel-title">Líderes por Categoría</div>
-                </div>
-                <div id="gridCards" class="right-panel-grid"></div>
-            </div>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-uppercase fw-bold">Open 2026 Leaderboard</h1>
+            <button id="admin-btn" class="btn btn-outline-secondary btn-sm" onclick="promptLogin()">⚙️</button>
         </div>
 
-        <div class="scores-container">
-            <div class="panel-inner">
-                <div class="panel-header">
-                    <div class="panel-title">Ranking General</div>
-                    <div class="panel-subtitle">Resultados oficiales</div>
+        <div id="admin-section" class="card card-body bg-secondary mb-4 d-none">
+            <h5>Agregar Nuevo Atleta</h5>
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <input type="text" id="athleteName" class="form-control" placeholder="Nombre completo">
                 </div>
-                <div id="gridBody"></div>
-            </div>
-        </div>
-
-        <div class="panel" id="addAthletePanel" style="display: none">
-            <div class="panel-inner">
-                <h4>Agregar Nuevo Atleta</h4>
-                <form id="addAthleteForm">
-                    <input type="text" id="newName" placeholder="Nombre" required>
-                    <input type="url" id="newPhoto" placeholder="URL Foto (opcional)">
-                    <select id="newCategory" required>
-                        <option value="">Selecciona categoría</option>
-                        <option value="Hombres RX">Hombres RX</option>
-                        <option value="Mujeres RX">Mujeres RX</option>
-                        <option value="Hombres Escalado">Hombres Escalado</option>
-                        <option value="Mujeres Escalado">Mujeres Escalado</option>
+                <div class="col-md-3">
+                    <select id="athleteGender" class="form-select">
+                        <option value="Male">Hombre</option>
+                        <option value="Female">Mujer</option>
                     </select>
-                    <button type="submit">Registrar Atleta</button>
-                </form>
+                </div>
+                <div class="col-md-3">
+                    <select id="athleteLevel" class="form-select">
+                        <option value="RX">RX</option>
+                        <option value="Scaled">Escalado</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" onclick="registerAthlete()">Registrar</button>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-3" id="genderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active text-uppercase" id="male-tab" data-bs-toggle="tab" data-bs-target="#male-panel" type="button">Hombres</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-uppercase" id="female-tab" data-bs-toggle="tab" data-bs-target="#female-panel" type="button">Mujeres</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="genderTabsContent">
+            <div class="tab-pane fade show active" id="male-panel" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Atleta</th>
+                                <th>WOD 1</th>
+                                <th>WOD 2</th>
+                                <th>WOD 3</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-male">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="female-panel" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Atleta</th>
+                                <th>WOD 1</th>
+                                <th>WOD 2</th>
+                                <th>WOD 3</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-female">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer class="app-footer">
-        <span class="footer-text">© 2026 Black Empire Co.</span>
-        <button id="editAccessBtn">⚙️</button>
-    </footer>
-
-    <script type="module" src="js/energy-grid.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="energy-grid.js"></script>
 </body>
 </html>
