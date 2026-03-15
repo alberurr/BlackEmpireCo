@@ -7,192 +7,78 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary-yellow: #ffc107;
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-        }
-
-        body {
-            background-color: var(--dark-bg);
-            color: #ffffff;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-        }
-
-        /* Banner de Admin */
-        #admin-banner {
-            background: linear-gradient(90deg, #ff8c00, #ffc107);
-            color: black;
-            font-weight: bold;
-            text-align: center;
-            padding: 5px;
-            font-size: 0.9rem;
-        }
-
-        /* Estilos de las Pestañas */
-        .nav-tabs {
-            border-bottom: 2px solid #333;
-        }
-        .nav-tabs .nav-link {
-            color: #aaa;
-            border: none;
-            padding: 12px 20px;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-        .nav-tabs .nav-link.active {
-            background-color: transparent !important;
-            color: var(--primary-yellow) !important;
-            border-bottom: 3px solid var(--primary-yellow) !important;
-        }
-
-        /* Leaderboard General Scroll */
-        #overall-leaderboard {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .overall-item {
-            background: var(--card-bg);
-            margin-bottom: 5px;
-            border-radius: 4px;
-        }
-
-        /* Estilos de Tabla */
-        .table {
-            color: white;
-            vertical-align: middle;
-        }
-        .text-rx { color: #ff4d4d; font-weight: bold; }
-        .text-s { color: #4dabff; font-weight: bold; }
-        
-        .input-name-edit:focus {
-            outline: 1px solid var(--primary-yellow);
-            background: rgba(255, 255, 255, 0.1) !important;
-        }
-
-        .btn-outline-danger {
-            border: 1px solid #ff4d4d;
-            color: #ff4d4d;
-            background: transparent;
-        }
-        .btn-outline-danger:hover {
-            background: #ff4d4d;
-            color: white;
-        }
-
-        .btn-config {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: #555;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-config:hover { color: var(--primary-yellow); }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <div id="admin-banner" class="d-none">
-        MODO EDICIÓN ACTIVO <button onclick="logout()" class="btn btn-sm btn-dark ms-3 py-0">Cerrar Sesión</button>
+    <div id="admin-banner" class="edit-banner d-none">
+        MODO EDICIÓN ACTIVO 
+        <button id="exitEditBtn" onclick="logout()">Cerrar Sesión</button>
     </div>
 
-    <div class="btn-config" onclick="promptLogin()">
-        <i class="fas fa-cog fa-lg"></i>
+    <div class="app-footer">
+        <span class="text-muted small">© 2026 Black Empire Co</span>
+        <button id="editAccessBtn" onclick="promptLogin()">
+            <i class="fas fa-cog"></i>
+        </button>
     </div>
 
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <h1 class="display-4 fw-bold text-uppercase">Open 2026</h1>
-            <p class="text-muted">Leaderboard Oficial - Black Empire Co</p>
+    <div class="app container py-5">
+        <div class="header-title-container">
+            <h1 class="header-title">Open 2026</h1>
+            <p class="panel-subtitle">Leaderboard Oficial</p>
         </div>
 
-        <div id="admin-section" class="card bg-dark border-secondary mb-5 d-none">
-            <div class="card-body">
-                <h5 class="card-title text-warning mb-3">Registrar Nuevo Atleta</h5>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <input type="text" id="athleteName" class="form-control bg-dark text-white border-secondary" placeholder="Nombre completo">
-                    </div>
-                    <div class="col-md-4">
-                        <select id="athleteGender" class="form-select bg-dark text-white border-secondary">
-                            <option value="Male">Hombre</option>
-                            <option value="Female">Mujer</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button onclick="registerAthlete()" class="btn btn-warning w-100 fw-bold">Agregar</button>
-                    </div>
+        <div id="admin-section" class="panel d-none">
+            <h3 class="panel-title">Registrar Atleta</h3>
+            <div id="addAthleteForm" class="row g-2">
+                <div class="col-md-6">
+                    <input type="text" id="athleteName" class="form-control" placeholder="Nombre completo">
+                </div>
+                <div class="col-md-3">
+                    <select id="athleteGender" class="form-select">
+                        <option value="Male">Hombre</option>
+                        <option value="Female">Mujer</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button onclick="registerAthlete()" class="w-100">Agregar Atleta</button>
                 </div>
             </div>
         </div>
 
-        <ul class="nav nav-tabs nav-justified mb-4" id="leaderboardTabs" role="tablist">
+        <ul class="nav nav-tabs mb-4" id="leaderboardTabs" role="tablist">
             <li class="nav-item">
-                <button class="nav-link active" id="top-tab" data-bs-toggle="tab" data-bs-target="#tab-top" type="button">Top 10 General</button>
+                <button class="nav-link active" id="top-tab" data-bs-toggle="tab" data-bs-target="#tab-top">Top 10</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" id="male-tab" data-bs-toggle="tab" data-bs-target="#tab-male" type="button">Hombres</button>
+                <button class="nav-link" id="male-tab" data-bs-toggle="tab" data-bs-target="#tab-male">Hombres</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" id="female-tab" data-bs-toggle="tab" data-bs-target="#tab-female" type="button">Mujeres</button>
+                <button class="nav-link" id="female-tab" data-bs-toggle="tab" data-bs-target="#tab-female">Mujeres</button>
             </li>
         </ul>
 
-        <div class="tab-content" id="leaderboardTabsContent">
-            
-            <div class="tab-pane fade show active" id="tab-top" role="tabpanel">
-                <div id="overall-leaderboard" class="p-2">
-                    <p class="text-center text-muted">Cargando clasificación...</p>
-                </div>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="tab-top">
+                <div id="overall-leaderboard">
+                    </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-male" role="tabpanel">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle">
-                        <thead>
-                            <tr class="text-muted small text-uppercase">
-                                <th style="width: 50px;">Pos</th>
-                                <th>Atleta</th>
-                                <th class="text-center">WOD 1</th>
-                                <th class="text-center">WOD 2</th>
-                                <th class="text-center">WOD 3</th>
-                                <th class="text-end">Total</th>
-                                <th style="width: 40px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-male"></tbody>
-                    </table>
-                </div>
+            <div class="tab-pane fade" id="tab-male">
+                <div id="leaderboard-male">
+                    </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-female" role="tabpanel">
-                <div class="table-responsive">
-                    <table class="table table-dark table-hover align-middle">
-                        <thead>
-                            <tr class="text-muted small text-uppercase">
-                                <th style="width: 50px;">Pos</th>
-                                <th>Atleta</th>
-                                <th class="text-center">WOD 1</th>
-                                <th class="text-center">WOD 2</th>
-                                <th class="text-center">WOD 3</th>
-                                <th class="text-end">Total</th>
-                                <th style="width: 40px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-female"></tbody>
-                    </table>
-                </div>
+            <div class="tab-pane fade" id="tab-female">
+                <div id="leaderboard-female">
+                    </div>
             </div>
-
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script type="module" src="js/energy-grid.js?v=4.0"></script>
+    <script type="module" src="js/energy-grid.js?v=6.0"></script>
 </body>
 </html>
