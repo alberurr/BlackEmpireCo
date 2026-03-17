@@ -118,7 +118,7 @@ const renderTable = (snap) => {
                                     <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
                                 </select>
                             </div>
-                            <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
+                            <input type="number" onfocus="this.select()" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
                                    class="form-control form-control-sm bg-transparent text-white border-0 text-center p-0 fw-bold" 
                                    value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
                         </div>
