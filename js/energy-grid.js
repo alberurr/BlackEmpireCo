@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -17,56 +17,23 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- LÓGICA DE RANKING (MENOR SCORE = MEJOR POSICIÓN) ---
-
-async function recalculateRankings() {
-    const snap = await getDocs(collection(db, "athletes"));
-    const athletes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const categories = ['Male', 'Female'];
-    const wods = ['wod1', 'wod2', 'wod3'];
-
-    for (const cat of categories) {
-        const list = athletes.filter(a => a.gender === cat);
-        const totals = {}; 
-        list.forEach(a => totals[a.id] = 0);
-
-        wods.forEach(wod => {
-            // Ordenamos para calcular puntos: Los 0s van al final en el cálculo
-            const sorted = [...list].sort((a, b) => {
-                const sA = a.scores[wod] || 0;
-                const sB = b.scores[wod] || 0;
-                if (sA === 0) return 1;
-                if (sB === 0) return -1;
-                return sA - sB;
-            });
-            
-            sorted.forEach((ath, index) => {
-                const score = ath.scores[wod] || 0;
-                // Si tiene 0, le damos el puntaje máximo del grupo (peor posición)
-                totals[ath.id] += (score === 0) ? list.length : (index + 1);
-            });
-        });
-
-        for (const id in totals) {
-            await updateDoc(doc(db, "athletes", id), { totalPoints: totals[id] });
-        }
-    }
+// --- FUNCIONES DE ACTUALIZACIÓN ---
+async function updateName(id, val) {
+    try { await updateDoc(doc(db, "athletes", id), { name: val }); } catch (e) { console.error(e); }
 }
-
-// --- FUNCIONES DE ACCIÓN ---
 
 async function updateScoreValue(id, wodKey, val) {
     const v = parseInt(val) || 0;
+    const ref = doc(db, "athletes", id);
     try {
-        // Primero actualizamos el valor del WOD
-        await updateDoc(doc(db, "athletes", id), { [`scores.${wodKey}`]: v });
-        // Luego recalculamos el ranking de todos
-        await recalculateRankings();
+        await updateDoc(ref, { [`scores.${wodKey}`]: v });
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+            const s = snap.data().scores;
+            const total = (s.wod1 || 0) + (s.wod2 || 0) + (s.wod3 || 0);
+            await updateDoc(ref, { totalPoints: total });
+        }
     } catch (e) { console.error(e); }
-}
-
-async function updateName(id, val) {
-    try { await updateDoc(doc(db, "athletes", id), { name: val }); } catch (e) { console.error(e); }
 }
 
 async function updateScoreType(id, key, val) {
@@ -74,15 +41,12 @@ async function updateScoreType(id, key, val) {
 }
 
 async function deleteAthlete(id, name) {
-    if (confirm(`¿Eliminar a ${name}?`)) {
-        try { 
-            await deleteDoc(doc(db, "athletes", id)); 
-            await recalculateRankings(); 
-        } catch (e) { console.error(e); }
+    if (confirm(`¿Estás seguro de que quieres eliminar a ${name}?`)) {
+        try { await deleteDoc(doc(db, "athletes", id)); } catch (e) { console.error(e); }
     }
 }
 
-// --- RENDERIZADO UI ---
+// --- LÓGICA DE RENDERIZADO ---
 let currentSnapshot = null;
 
 const renderTable = (snap) => {
@@ -97,55 +61,68 @@ const renderTable = (snap) => {
     let mP = 1, fP = 1, oP = 1;
     const isAdmin = auth.currentUser !== null;
 
-    // Firebase ya nos da los datos ordenados por totalPoints (menor a mayor)
     snap.forEach((d) => {
         const a = d.data(); const id = d.id;
         
+        // Plantilla para tarjetas de categorías (Hombres/Mujeres)
         const cardHTML = `
             <div class="athlete-card">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
                         <span class="badge bg-warning text-dark me-2">#${a.gender === 'Male' ? mP++ : fP++}</span>
-                        <input type="text" class="input-name-edit" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)">
+                        <input type="text" class="input-name-edit" 
+                               value="${a.name}" ${!isAdmin ? 'readonly' : ''} 
+                               onchange="updateName('${id}', this.value)">
                     </div>
-                    <div class="total-cell h5 mb-0">${a.totalPoints} <small style="font-size:0.6em; color:#888;">RANK</small></div>
+                    <div class="total-cell h5 mb-0">${a.totalPoints} <small style="font-size:0.6em; color:#888;">PTS</small></div>
                 </div>
-                <div class="d-flex gap-2 w-100 justify-content-between">
+                
+                <div class="d-flex gap-2">
                     ${[1, 2, 3].map(n => `
                         <div class="wod-box">
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:0.55rem; color:#888;">W${n}</span>
+                                <span style="font-size:0.6rem; color:#888;">WOD ${n}</span>
                                 <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" 
                                         class="form-select-sm border-0 ${a.scores['wod'+n+'Type']==='RX'?'text-rx':'text-s'}" 
-                                        style="font-size:0.6rem; background:rgba(255,255,255,0.1); color:white;" ${!isAdmin?'disabled':''}>
+                                        style="font-size:0.65rem; background:rgba(255,255,255,0.1); color:white;" 
+                                        ${!isAdmin?'disabled':''}>
                                     <option value="RX" ${a.scores['wod'+n+'Type']==='RX'?'selected':''}>RX</option>
                                     <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
                                 </select>
                             </div>
-                            <input type="number" onfocus="this.select()" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
-                                   class="form-control form-control-sm bg-transparent text-white border-0 text-center p-0 fw-bold" 
+                            <input type="number" onchange="updateScoreValue('${id}', 'wod${n}', this.value)" 
+                                   class="form-control form-control-sm bg-transparent text-white border-0 text-center p-0" 
                                    value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
                         </div>
                     `).join('')}
-                    ${isAdmin ? `<button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger border-0 p-1"><i class="fas fa-trash-alt" style="font-size:0.8rem;"></i></button>` : ''}
+                    ${isAdmin ? `
+                        <button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger border-0 ms-1">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>` : ''}
                 </div>
             </div>`;
 
+        // Render TOP 10 (Vista General simplificada)
         if (oP <= 10 && oDiv) {
-            oDiv.innerHTML += `<div class="athlete-card d-flex justify-content-between align-items-center py-2 px-3">
-                <span><b class="text-warning">#${oP++}</b> <span class="ms-2 text-uppercase" style="font-size:0.9em;">${a.name}</span> <small class="text-muted ms-1" style="font-size:0.7em;">(${a.gender[0]})</small></span>
-                <b class="text-warning">${a.totalPoints}</b>
-            </div>`;
+            oDiv.innerHTML += `
+                <div class="athlete-card d-flex justify-content-between align-items-center py-2 px-3">
+                    <span>
+                        <b class="text-warning">#${oP++}</b> 
+                        <span class="ms-2 text-uppercase" style="font-size:0.9em;">${a.name}</span>
+                        <small class="text-muted ms-1" style="font-size:0.7em;">(${a.gender[0]})</small>
+                    </span>
+                    <b class="text-warning">${a.totalPoints}</b>
+                </div>`;
         }
 
+        // Asignar a su pestaña correspondiente
         if (a.gender === 'Male' && mTable) mTable.innerHTML += cardHTML;
         else if (fTable) fTable.innerHTML += cardHTML;
     });
 };
 
-// --- LISTENERS ---
-
-onSnapshot(query(collection(db, "athletes"), orderBy("timestamp", "desc")), (snap) => {
+// --- ESCUCHADORES Y AUTH ---
+onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
 });
@@ -158,12 +135,14 @@ onAuthStateChanged(auth, (u) => {
     if (currentSnapshot) renderTable(currentSnapshot);
 });
 
-// --- GLOBALES ---
+// --- EXPOSICIÓN GLOBAL ---
 window.promptLogin = () => {
     const p = prompt("Password:");
-    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(() => alert("Error"));
+    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Acceso denegado"));
 };
+
 window.logout = () => signOut(auth).then(() => location.reload());
+
 window.registerAthlete = async () => {
     const n = document.getElementById('athleteName').value;
     const g = document.getElementById('athleteGender').value;
@@ -172,10 +151,8 @@ window.registerAthlete = async () => {
         await addDoc(collection(db, "athletes"), { 
             name: n, gender: g, 
             scores: { wod1:0, wod1Type:'RX', wod2:0, wod2Type:'RX', wod3:0, wod3Type:'RX' }, 
-            totalPoints: 99, // Valor inicial alto
-            timestamp: new Date() // Esto garantiza que aparezca arriba
+            totalPoints:0, timestamp: new Date()
         });
-        await recalculateRankings();
         document.getElementById('athleteName').value = "";
     } catch (e) { console.error(e); }
 };
