@@ -20,29 +20,33 @@ const auth = getAuth(app);
 // --- LÓGICA DE RANKING (MENOR SCORE = MEJOR POSICIÓN) ---
 
 async function recalculateRankings() {
-    // Obtenemos todos los atletas actuales
     const snap = await getDocs(collection(db, "athletes"));
     const athletes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
     const categories = ['Male', 'Female'];
     const wods = ['wod1', 'wod2', 'wod3'];
 
     for (const cat of categories) {
         const list = athletes.filter(a => a.gender === cat);
-        const totals = {}; // Para acumular puntos de posición
+        const totals = {}; 
         list.forEach(a => totals[a.id] = 0);
 
         wods.forEach(wod => {
-            // Ordenamos: a - b (Ascendente: 5 seg va antes que 10 seg)
-            const sorted = [...list].sort((a, b) => (a.scores[wod] || 0) - (b.scores[wod] || 0));
+            // Ordenamos para calcular puntos: Los 0s van al final en el cálculo
+            const sorted = [...list].sort((a, b) => {
+                const sA = a.scores[wod] || 0;
+                const sB = b.scores[wod] || 0;
+                if (sA === 0) return 1;
+                if (sB === 0) return -1;
+                return sA - sB;
+            });
             
             sorted.forEach((ath, index) => {
-                // Posición 1 = 1 punto, Posición 2 = 2 puntos...
-                totals[ath.id] += (index + 1);
+                const score = ath.scores[wod] || 0;
+                // Si tiene 0, le damos el puntaje máximo del grupo (peor posición)
+                totals[ath.id] += (score === 0) ? list.length : (index + 1);
             });
         });
 
-        // Guardar el total de puntos acumulados en la DB
         for (const id in totals) {
             await updateDoc(doc(db, "athletes", id), { totalPoints: totals[id] });
         }
@@ -141,7 +145,7 @@ const renderTable = (snap) => {
 
 // --- LISTENERS ---
 
-onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
+onSnapshot(query(collection(db, "athletes"), orderBy("timestamp", "desc")), (snap) => {
     currentSnapshot = snap;
     renderTable(snap);
 });
