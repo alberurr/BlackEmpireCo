@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -17,53 +17,52 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- FUNCIONES DE ACTUALIZACIÓN Y RANKING ---
+// --- LÓGICA DE RANKING (MENOR SCORE = MEJOR POSICIÓN) ---
 
-async function updateName(id, val) {
-    try { await updateDoc(doc(db, "athletes", id), { name: val }); } catch (e) { console.error(e); }
+async function recalculateRankings() {
+    // Obtenemos todos los atletas actuales
+    const snap = await getDocs(collection(db, "athletes"));
+    const athletes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    const categories = ['Male', 'Female'];
+    const wods = ['wod1', 'wod2', 'wod3'];
+
+    for (const cat of categories) {
+        const list = athletes.filter(a => a.gender === cat);
+        const totals = {}; // Para acumular puntos de posición
+        list.forEach(a => totals[a.id] = 0);
+
+        wods.forEach(wod => {
+            // Ordenamos: a - b (Ascendente: 5 seg va antes que 10 seg)
+            const sorted = [...list].sort((a, b) => (a.scores[wod] || 0) - (b.scores[wod] || 0));
+            
+            sorted.forEach((ath, index) => {
+                // Posición 1 = 1 punto, Posición 2 = 2 puntos...
+                totals[ath.id] += (index + 1);
+            });
+        });
+
+        // Guardar el total de puntos acumulados en la DB
+        for (const id in totals) {
+            await updateDoc(doc(db, "athletes", id), { totalPoints: totals[id] });
+        }
+    }
 }
+
+// --- FUNCIONES DE ACCIÓN ---
 
 async function updateScoreValue(id, wodKey, val) {
     const v = parseInt(val) || 0;
-    const ref = doc(db, "athletes", id);
     try {
-        // 1. Actualizar el valor bruto en el atleta
-        await updateDoc(ref, { [`scores.${wodKey}`]: v });
-        
-        // 2. Recalcular posiciones de TODOS los atletas
+        // Primero actualizamos el valor del WOD
+        await updateDoc(doc(db, "athletes", id), { [`scores.${wodKey}`]: v });
+        // Luego recalculamos el ranking de todos
         await recalculateRankings();
     } catch (e) { console.error(e); }
 }
 
-async function recalculateRankings() {
-    const snap = await getDocs(collection(db, "athletes"));
-    const athletes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-    const groups = {
-        'Male': athletes.filter(a => a.gender === 'Male'),
-        'Female': athletes.filter(a => a.gender === 'Female')
-    };
-
-    for (const gender in groups) {
-        const list = groups[gender];
-        const pointsTable = {}; 
-        list.forEach(a => pointsTable[a.id] = 0);
-
-        ['wod1', 'wod2', 'wod3'].forEach(wod => {
-            // CAMBIO AQUÍ: (a - b) Ordena de MENOR a MAYOR. 
-            // El score más bajo queda en el índice 0 (Posición 1).
-            const sorted = [...list].sort((a, b) => (a.scores[wod] || 0) - (b.scores[wod] || 0));
-            
-            sorted.forEach((ath, index) => {
-                const positionPoints = index + 1;
-                pointsTable[ath.id] += positionPoints;
-            });
-        });
-
-        for (const id in pointsTable) {
-            await updateDoc(doc(db, "athletes", id), { totalPoints: pointsTable[id] });
-        }
-    }
+async function updateName(id, val) {
+    try { await updateDoc(doc(db, "athletes", id), { name: val }); } catch (e) { console.error(e); }
 }
 
 async function updateScoreType(id, key, val) {
@@ -71,7 +70,7 @@ async function updateScoreType(id, key, val) {
 }
 
 async function deleteAthlete(id, name) {
-    if (confirm(`¿Estás seguro de que quieres eliminar a ${name}?`)) {
+    if (confirm(`¿Eliminar a ${name}?`)) {
         try { 
             await deleteDoc(doc(db, "athletes", id)); 
             await recalculateRankings(); 
@@ -79,7 +78,7 @@ async function deleteAthlete(id, name) {
     }
 }
 
-// --- LÓGICA DE RENDERIZADO ---
+// --- RENDERIZADO UI ---
 let currentSnapshot = null;
 
 const renderTable = (snap) => {
@@ -94,6 +93,7 @@ const renderTable = (snap) => {
     let mP = 1, fP = 1, oP = 1;
     const isAdmin = auth.currentUser !== null;
 
+    // Firebase ya nos da los datos ordenados por totalPoints (menor a mayor)
     snap.forEach((d) => {
         const a = d.data(); const id = d.id;
         
@@ -102,9 +102,7 @@ const renderTable = (snap) => {
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
                         <span class="badge bg-warning text-dark me-2">#${a.gender === 'Male' ? mP++ : fP++}</span>
-                        <input type="text" class="input-name-edit" 
-                               value="${a.name}" ${!isAdmin ? 'readonly' : ''} 
-                               onchange="updateName('${id}', this.value)">
+                        <input type="text" class="input-name-edit" value="${a.name}" ${!isAdmin ? 'readonly' : ''} onchange="updateName('${id}', this.value)">
                     </div>
                     <div class="total-cell h5 mb-0">${a.totalPoints} <small style="font-size:0.6em; color:#888;">RANK</small></div>
                 </div>
@@ -115,8 +113,7 @@ const renderTable = (snap) => {
                                 <span style="font-size:0.55rem; color:#888;">W${n}</span>
                                 <select onchange="updateScoreType('${id}', 'wod${n}Type', this.value)" 
                                         class="form-select-sm border-0 ${a.scores['wod'+n+'Type']==='RX'?'text-rx':'text-s'}" 
-                                        style="font-size:0.6rem; background:rgba(255,255,255,0.1); color:white;" 
-                                        ${!isAdmin?'disabled':''}>
+                                        style="font-size:0.6rem; background:rgba(255,255,255,0.1); color:white;" ${!isAdmin?'disabled':''}>
                                     <option value="RX" ${a.scores['wod'+n+'Type']==='RX'?'selected':''}>RX</option>
                                     <option value="S" ${a.scores['wod'+n+'Type']==='S'?'selected':''}>S</option>
                                 </select>
@@ -126,29 +123,23 @@ const renderTable = (snap) => {
                                    value="${a.scores['wod'+n]||0}" ${!isAdmin?'disabled':''}>
                         </div>
                     `).join('')}
-                    ${isAdmin ? `
-                        <button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger border-0 p-1">
-                            <i class="fas fa-trash-alt" style="font-size:0.8rem;"></i>
-                        </button>` : ''}
+                    ${isAdmin ? `<button onclick="deleteAthlete('${id}', '${a.name}')" class="btn-outline-danger border-0 p-1"><i class="fas fa-trash-alt" style="font-size:0.8rem;"></i></button>` : ''}
                 </div>
             </div>`;
 
         if (oP <= 10 && oDiv) {
-            oDiv.innerHTML += `
-                <div class="athlete-card d-flex justify-content-between align-items-center py-2 px-3">
-                    <span>
-                        <b class="text-warning">#${oP++}</b> 
-                        <span class="ms-2 text-uppercase" style="font-size:0.9em;">${a.name}</span>
-                        <small class="text-muted ms-1" style="font-size:0.7em;">(${a.gender[0]})</small>
-                    </span>
-                    <b class="text-warning">${a.totalPoints}</b>
-                </div>`;
+            oDiv.innerHTML += `<div class="athlete-card d-flex justify-content-between align-items-center py-2 px-3">
+                <span><b class="text-warning">#${oP++}</b> <span class="ms-2 text-uppercase" style="font-size:0.9em;">${a.name}</span> <small class="text-muted ms-1" style="font-size:0.7em;">(${a.gender[0]})</small></span>
+                <b class="text-warning">${a.totalPoints}</b>
+            </div>`;
         }
 
         if (a.gender === 'Male' && mTable) mTable.innerHTML += cardHTML;
         else if (fTable) fTable.innerHTML += cardHTML;
     });
 };
+
+// --- LISTENERS ---
 
 onSnapshot(query(collection(db, "athletes"), orderBy("totalPoints", "asc")), (snap) => {
     currentSnapshot = snap;
@@ -163,13 +154,12 @@ onAuthStateChanged(auth, (u) => {
     if (currentSnapshot) renderTable(currentSnapshot);
 });
 
+// --- GLOBALES ---
 window.promptLogin = () => {
     const p = prompt("Password:");
-    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(e => alert("Acceso denegado"));
+    if (p) signInWithEmailAndPassword(auth, "alber.urr@gmail.com", p).catch(() => alert("Error"));
 };
-
 window.logout = () => signOut(auth).then(() => location.reload());
-
 window.registerAthlete = async () => {
     const n = document.getElementById('athleteName').value;
     const g = document.getElementById('athleteGender').value;
@@ -178,7 +168,7 @@ window.registerAthlete = async () => {
         await addDoc(collection(db, "athletes"), { 
             name: n, gender: g, 
             scores: { wod1:0, wod1Type:'RX', wod2:0, wod2Type:'RX', wod3:0, wod3Type:'RX' }, 
-            totalPoints:0, timestamp: new Date()
+            totalPoints:999, timestamp: new Date() 
         });
         await recalculateRankings();
         document.getElementById('athleteName').value = "";
