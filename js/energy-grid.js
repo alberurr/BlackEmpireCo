@@ -172,7 +172,8 @@ window.registerAthlete = async () => {
         await addDoc(collection(db, "athletes"), { 
             name: n, gender: g, 
             scores: { wod1:0, wod1Type:'RX', wod2:0, wod2Type:'RX', wod3:0, wod3Type:'RX' }, 
-            totalPoints:999, timestamp: new Date() 
+            totalPoints: 99, // Valor inicial alto
+            timestamp: new Date() // Esto garantiza que aparezca arriba
         });
         await recalculateRankings();
         document.getElementById('athleteName').value = "";
